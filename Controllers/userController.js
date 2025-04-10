@@ -5,8 +5,24 @@ const jwt = require('jsonwebtoken');
 const userLogin = async (req, res) => {
       console.log("Request body:", req.body);  // 👈 Add this line
 
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
+  // Validation checks
+  if (!email || !password || !role) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  // Password length check
+  if (password.length < 6) {
+    return res.status(400).json({ message: "Password must be at least 6 characters" });
+  }
+
+   // Role check
+   const allowedRoles = ["admin", "receptionist"];
+   if (!allowedRoles.includes(role)) {
+     return res.status(400).json({ message: "Invalid role" });
+   }
+ 
   try {
     const user = await User.findOne({
         email: email 
@@ -46,9 +62,33 @@ const userLogin = async (req, res) => {
   }
 };
 
+
+
 const registerUser = async (req, res) => {
   const { email, password, role } = req.body;
+ // Basic field check
+  if (!email || !password || !role) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
+  
+  // Email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: "Invalid email format" });
+  }
+
+  // Password length validation
+  if (password.length < 6) {
+    return res.status(400).json({ message: "Password must be at least 6 characters long" });
+  }
+
+  // Role validation
+  const allowedRoles = ["admin", "receptionist"];
+  if (!allowedRoles.includes(role)) {
+    return res.status(400).json({ message: "Invalid role" });
+  }
+  
   try {
     const existing = await User.findOne({ email });
     if (existing) {
@@ -66,9 +106,12 @@ const registerUser = async (req, res) => {
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully" });
-  } catch (err) {
+  }catch (err) {
+    console.error("Register Error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+  
 
 module.exports = { userLogin , registerUser};

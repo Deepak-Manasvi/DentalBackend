@@ -7,9 +7,13 @@ exports.createPrescription = async (req, res) => {
     await pres.save();
     res.status(201).json(pres);
   } catch (error) {
-    res.status(400).json({ message: "Error creating prescription", error });
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ message: "Validation Error", errors: error.errors });
+    }
+    res.status(500).json({ message: "Error creating prescription", error });
   }
 };
+
 
 exports.getPrescriptionByExamination = async (req, res) => {
   try {

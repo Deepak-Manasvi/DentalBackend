@@ -7,6 +7,8 @@ router.post("/createBill", billingController.createReceipt);
 
 router.get("/getAllReceipts", billingController.getAllReceipts);
 
+router.get("/getReceiptsbyid", billingController.getReceiptsbyId);
+
 router.patch("/invoice/:id", billingController.generateInvoice);
 
 router.get("/getAllInvoices", billingController.getAllInvoices);

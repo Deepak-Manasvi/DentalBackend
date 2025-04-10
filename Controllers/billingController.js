@@ -6,11 +6,22 @@ const mongoose = require("mongoose");
 exports.createReceipt = async (req, res) => {
   try {
     const receiptNumber = `RECPT-${new Date().toISOString().replace(/[-:.TZ]/g, "")}`;
-    const billing = new Billing({ ...req.body, receiptNumber });
+
+    const billing = new Billing({
+      ...req.body,
+      receiptNumber
+    });
+
     await billing.save();
     res.status(201).json(billing);
   } catch (error) {
-    res.status(400).json({ message: "Error creating receipt", error });
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation Error",
+        errors: error.errors
+      });
+    }
+    res.status(500).json({ message: "Error creating receipt", error });
   }
 };
 
@@ -27,13 +38,23 @@ exports.getAllReceipts = async (req, res) => {
 // ✅ Generate Invoice
 exports.generateInvoice = async (req, res) => {
   try {
-    const billing = await Billing.findByIdAndUpdate(req.params.id, { invoiceGenerated: true }, { new: true });
+    const billing = await Billing.findByIdAndUpdate(
+      req.params.id,
+      {
+        invoiceGenerated: true,
+        invoiceDate: new Date()
+      },
+      { new: true, runValidators: true }
+    );
+
     if (!billing) return res.status(404).json({ message: "Billing record not found" });
+
     res.status(200).json({ message: "Invoice generated", billing });
   } catch (error) {
     res.status(500).json({ message: "Error generating invoice", error });
   }
 };
+
 
 // ✅ List All Invoices
 exports.getAllInvoices = async (req, res) => {

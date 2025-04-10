@@ -7,9 +7,13 @@ exports.addProcedure = async (req, res) => {
     await proc.save();
     res.status(201).json(proc);
   } catch (error) {
-    res.status(400).json({ message: "Error adding procedure", error });
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ message: "Validation Error", errors: error.errors });
+    }
+    res.status(500).json({ message: "Error adding procedure", error });
   }
 };
+
 
 exports.getProceduresByExamination = async (req, res) => {
   try {
