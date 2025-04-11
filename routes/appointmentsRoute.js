@@ -4,7 +4,7 @@ const {
   getAllAppointments,
   createAppointment,
   updateAppointment,
-  deleteAppointment,getAppointmentById,
+  deleteAppointment,
   getAppointmentById, 
   getPatientByUHID,
    deletePatientByUHID
