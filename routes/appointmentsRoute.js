@@ -1,16 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const { 
-    getAllAppointments,
-    createAppointment,
-    updateAppointment,
-    deleteAppointment 
+const {
+  getAllAppointments,
+  createAppointment,
+  updateAppointment,
+  deleteAppointment,
+  getAppointmentById, 
+  getPatientByUHID,
+   deletePatientByUHID
 } = require("../Controllers/appointmentController");
 
-router.get("/appointmentList", getAllAppointments);
-router.post("/addAppointment", createAppointment);
-// router.get("/getbyid/:id", getAppointmentById);
-router.put("/update/:id", updateAppointment);
-router.delete("/delete/:id", deleteAppointment);
+router.get("/getllAppointmentList", getAllAppointments);
+router.post("/createAppointment", createAppointment);
+router.get("/appointmentGetbyid/:id", getAppointmentById); // keep this
+router.put("/updateAppointment/:id", updateAppointment);
+router.delete("/deleteAppointment/:id", deleteAppointment);
+router.get("/getPatientByUHID/:uhid", getPatientByUHID);
+router.delete("/deletePatientUHID/:uhid", deletePatientByUHID);
 
-module.exports = router; 
+module.exports = router;

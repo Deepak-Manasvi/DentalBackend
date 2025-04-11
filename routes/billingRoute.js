@@ -7,7 +7,7 @@ const {
     getAllInvoices,
 } = require("../Controllers/billingController");
 
-router.post("/createBill", createReceipt);
+router.post("/createBillReceipt", createReceipt);
 router.get("/getAllReceipts", getAllReceipts);
 router.patch("/generateInvoiceById/:id", generateInvoiceById);
 router.get("/getAllInvoices", getAllInvoices);

@@ -3,8 +3,8 @@ const router = express.Router();
 
 const { addProcedure, getProceduresByExamination } = require("../Controllers/procedureController");
 
-router.post("/add", addProcedure);
-router.get("/examination/:examId", getProceduresByExamination);
+router.post("/addprocedure", addProcedure);
+router.get("/getProcedureByExaminationId/:examId", getProceduresByExamination);
 
 module.exports = router;
 

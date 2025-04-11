@@ -10,113 +10,187 @@ exports.getAllAppointments = async (req, res) => {
       appointmentList: appointments,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching appointments", error });
+    res.status(500).json({
+      success: false,
+      message: "Error fetching appointments",
+      error: error.message,
+    });
   }
 };
 
 // ✅ POST - Book Appointment
+const generateUHID = () => {
+  return 'UHID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+};
+
 exports.createAppointment = async (req, res) => {
   try {
-    // Destructure request body
-    const {
-      appId,
-      patientType,
-      patientName,
-      gender,
-      mobileNumber,
-      age,
-      address,
-      healthDetails,
-      appointmentDate,
-      appointmentTime,
-      doctorName,
-      opdAmount,
-      paymentMode,
-      transactionId,
-      status,
-    } = req.body;
+    const requiredFields = [
+      "appId",
+      "patientType",
+      "patientName",
+      "gender",
+      "mobileNumber",
+      "age",
+      "address",
+      "doctorName",
+      "paymentMode",
+      "status",
+    ];
 
-    // Manual validation for required fields based on schema
-    if (
-      !appId ||
-      !patientType ||
-      !patientName ||
-      !gender ||
-      !mobileNumber ||
-      !age ||
-      !address ||
-      !doctorName ||
-      !opdAmount ||
-      !paymentMode ||
-      !status
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "All required fields must be provided.",
-      });
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({
+          success: false,
+          message: `${field} is required.`,
+        });
+      }
     }
 
-
-    //data save in mongodb
-
-    const newAppointment = new Appointment(req.body);
+    const uhid = generateUHID();
+    const newAppointment = new Appointment({ ...req.body, uhid });
     const appointmentDetails = await newAppointment.save();
-    return res.status(200).json({
+
+    return res.status(201).json({
       success: true,
+      message: "Appointment booked successfully",
       appointmentDetails,
     });
   } catch (error) {
-    console.error("Error booking appointment:", error); // important
-    let errorMessage = error.message;
-
-    // Custom error for unique mobile number
-    if (error.code === 11000 && error.keyPattern.mobileNumber) {
-      errorMessage = "Mobile number already exists.";
-    }
-
     return res.status(400).json({
+      success: false,
       message: "Error booking appointment",
       error: error.message,
     });
   }
 };
 
-// ✅ Get single appointment
+// ✅ GET - Appointment by ID
+// ✅ Updated controller
 exports.getAppointmentById = async (req, res) => {
   try {
-    const appointment = await Appointment.findById(req.params.id).populate(
-      "patientDetails"
-    );
-    if (!appointment)
-      return res.status(404).json({ message: "Appointment not found" });
-    res.status(200).json(appointment);
+    const appointment = await Appointment.findOne({ appId: req.params.id });
+
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      appointment,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error", error });
+    res.status(500).json({
+      success: false,
+      message: "Error fetching appointment",
+      error: error.message,
+    });
   }
 };
 
-// ✅ Edit
+// ✅ PUT - Update Appointment
 exports.updateAppointment = async (req, res) => {
   try {
-    const updated = await Appointment.findByIdAndUpdate(
-      req.params.id,
+    const updatedAppointment = await Appointment.findOneAndUpdate(
+      { appId: req.params.id },
       req.body,
       { new: true }
     );
-    if (!updated) return res.status(404).json({ message: "Not found" });
-    res.status(200).json(updated);
+    
+
+    if (!updatedAppointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Appointment updated successfully",
+      updatedAppointment,
+    });
   } catch (error) {
-    res.status(400).json({ message: "Error updating", error });
+    res.status(400).json({
+      success: false,
+      message: "Error updating appointment",
+      error: error.message,
+    });
   }
 };
 
-// ✅ Cancel
+// ✅ DELETE - Cancel Appointment
 exports.deleteAppointment = async (req, res) => {
   try {
-    const del = await Appointment.findByIdAndDelete(req.params.id);
-    if (!del) return res.status(404).json({ message: "Not found" });
-    res.status(200).json({ message: "Appointment cancelled" });
+    const deletedAppointment = await Appointment.findOneAndDelete({ appId: req.params.id });
+
+    if (!deletedAppointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Appointment cancelled successfully",
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error", error });
+    res.status(500).json({
+      success: false,
+      message: "Error cancelling appointment",
+      error: error.message,
+    });
+  }
+};
+
+exports.getPatientByUHID = async (req, res) => {
+  try {
+    const patient = await Appointment.findOne({ uhid: req.params.uhid });
+
+    if (!patient) {
+      return res.status(404).json({
+        success: false,
+        message: "Patient not found with this UHID",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      patient,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching patient by UHID",
+      error: error.message,
+    });
+  }
+};
+
+exports.deletePatientByUHID = async (req, res) => {
+  try {
+    const deletedPatient = await Appointment.findOneAndDelete({ uhid: req.params.uhid });
+
+    if (!deletedPatient) {
+      return res.status(404).json({
+        success: false,
+        message: "Patient not found with this UHID",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Patient deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error deleting patient by UHID",
+      error: error.message,
+    });
   }
 };

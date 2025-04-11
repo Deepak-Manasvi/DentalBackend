@@ -4,7 +4,6 @@ const appointmentSchema = new mongoose.Schema(
   {
     appId: {
       type: String,
-      required: true
     },
     patientType: {
       type: String,
@@ -25,7 +24,6 @@ const appointmentSchema = new mongoose.Schema(
     mobileNumber: {
       type: String,
       required: true,
-      unique: true,
     },
     age: {
       type: Number,
@@ -35,7 +33,12 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+    uhid: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    
     healthDetails: {
       medicalHistory: [
         {
@@ -67,23 +70,23 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    opdAmount: {
-      type: Number,
+    opdAmount: { 
+      type: Number,  
+      required: false
+  },
+  paymentMode: {
+    type: String,
+    enum: ["Cash", "Card", "UPI"],
+    required: true,
+  },
+  transactionId: { 
+      type: String 
+  },
+  status: { 
+      type: String, 
+      enum: ["Paid", "Due"], 
       required: true
-    },
-    paymentMode: {
-      type: String,
-      enum: ["Cash", "Card", "UPI"],
-      required: true,
-    },
-    transactionId: {
-      type: String
-    },
-    status: {
-      type: String,
-      enum: ["Paid", "Due"],
-      required: true
-    },
+  },
   },
   { timestamps: true }
 );
