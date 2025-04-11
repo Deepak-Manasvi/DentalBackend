@@ -1,18 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const billingController = require("../Controllers/billingController");
+const {
+    createReceipt,
+    getAllReceipts,
+    generateInvoiceById,
+    getAllInvoices,
+} = require("../Controllers/billingController");
 
-
-router.post("/createBill", billingController.createReceipt);
-
-router.get("/getAllReceipts", billingController.getAllReceipts);
-
-router.get("/getReceiptsbyid", billingController.getReceiptsbyId);
-
-router.patch("/invoice/:id", billingController.generateInvoice);
-
-router.get("/getAllInvoices", billingController.getAllInvoices);
+router.post("/createBill", createReceipt);
+router.get("/getAllReceipts", getAllReceipts);
+router.patch("/generateInvoiceById/:id", generateInvoiceById);
+router.get("/getAllInvoices", getAllInvoices);
 
 module.exports = router;
 
- 
+

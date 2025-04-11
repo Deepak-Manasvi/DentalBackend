@@ -1,44 +1,58 @@
-const User = require('../Models/userModel');  
+const User = require('../Models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const userLogin = async (req, res) => {
-      console.log("Request body:", req.body);  // 👈 Add this line
-
+exports.userLogin = async (req, res) => {
   const { email, password, role } = req.body;
 
-  // Validation checks
+  // Field validation
   if (!email || !password || !role) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({
+      status: 400,
+      message: "Validation error: Email, password, and role are required."
+    });
   }
 
   // Password length check
   if (password.length < 6) {
-    return res.status(400).json({ message: "Password must be at least 6 characters" });
+    return res.status(400).json({
+      status: 400,
+      message: "Validation error: Password must be at least 6 characters long."
+    });
   }
 
-   // Role check
-   const allowedRoles = ["admin", "receptionist"];
-   if (!allowedRoles.includes(role)) {
-     return res.status(400).json({ message: "Invalid role" });
-   }
- 
+  // Role check
+  const allowedRoles = ["admin", "receptionist"];
+  if (!allowedRoles.includes(role)) {
+    return res.status(400).json({
+      status: 400,
+      message: "Validation error: Role must be either 'admin' or 'receptionist'."
+    });
+  }
+
   try {
-    const user = await User.findOne({
-        email: email 
-      });
-      
-    console.log("user",user)
+    const user = await User.findOne({ email });
+
     if (!user) {
-      return res.status(400).json({ message: 'User not found' });
+      return res.status(404).json({
+        status: 404,
+        message: "Authentication error: User not found."
+      });
     }
 
-     console.log(password )
-     console.log(user.password )
-    
+    if (user.role !== role) {
+      return res.status(403).json({
+        status: 403,
+        message: `Unauthorized access: Role mismatch. Registered as '${user.role}'.`
+      });
+    }
+
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({
+        status: 401,
+        message: "Authentication error: Invalid credentials."
+      });
     }
 
     const payload = {
@@ -49,50 +63,68 @@ const userLogin = async (req, res) => {
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });
 
-    res.status(200).json({
-      message: 'Login Successful',
+    return res.status(200).json({
+      status: 200,
+      message: "Login successful.",
       token,
       role: user.role,
       userId: user._id,
       email: user.email
     });
+
   } catch (error) {
     console.error('Login Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error while logging in."
+    });
   }
 };
 
-
-
-const registerUser = async (req, res) => {
+exports.userRegister = async (req, res) => {
   const { email, password, role } = req.body;
- // Basic field check
+
+  // Field validation
   if (!email || !password || !role) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({
+      status: 400,
+      message: "Validation error: Email, password, and role are required."
+    });
   }
 
-  
   // Email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: "Invalid email format" });
+    return res.status(400).json({
+      status: 400,
+      message: "Validation error: Invalid email format."
+    });
   }
 
   // Password length validation
   if (password.length < 6) {
-    return res.status(400).json({ message: "Password must be at least 6 characters long" });
+    return res.status(400).json({
+      status: 400,
+      message: "Validation error: Password must be at least 6 characters long."
+    });
   }
 
   // Role validation
   const allowedRoles = ["admin", "receptionist"];
   if (!allowedRoles.includes(role)) {
-    return res.status(400).json({ message: "Invalid role" });
+    return res.status(400).json({
+      status: 400,
+      message: "Validation error: Role must be either 'admin' or 'receptionist'."
+    });
   }
-  
+
   try {
     const existing = await User.findOne({ email });
     if (existing) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(409).json({
+        status: 409,
+        message: "Conflict: User with this email already exists."
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -105,13 +137,16 @@ const registerUser = async (req, res) => {
 
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully" });
-  }catch (err) {
+    return res.status(201).json({
+      status: 201,
+      message: "User registered successfully."
+    });
+  } catch (err) {
     console.error("Register Error:", err);
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error while registering user."
+    });
   }
 };
 
-  
-
-module.exports = { userLogin , registerUser};

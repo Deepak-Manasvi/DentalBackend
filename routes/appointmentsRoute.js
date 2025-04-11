@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { getAllAppointments,
+const { 
+    getAllAppointments,
     createAppointment,
     updateAppointment,
-    deleteAppointment } = require("../Controllers/appointmentController");
+    deleteAppointment 
+} = require("../Controllers/appointmentController");
 
 router.get("/appointmentList", getAllAppointments);
 router.post("/addAppointment", createAppointment);

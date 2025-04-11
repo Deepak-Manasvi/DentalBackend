@@ -56,7 +56,7 @@ exports.createAppointment = async (req, res) => {
       });
     }
 
-  
+
     //data save in mongodb
 
     const newAppointment = new Appointment(req.body);

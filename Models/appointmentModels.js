@@ -4,7 +4,7 @@ const appointmentSchema = new mongoose.Schema(
   {
     appId: {
       type: String,
-      required:true
+      required: true
     },
     patientType: {
       type: String,
@@ -67,23 +67,23 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    opdAmount: { 
-      type: Number,  
+    opdAmount: {
+      type: Number,
       required: true
-  },
-  paymentMode: {
-    type: String,
-    enum: ["Cash", "Card", "UPI"],
-    required: true,
-  },
-  transactionId: { 
-      type: String 
-  },
-  status: { 
-      type: String, 
-      enum: ["Paid", "Due"], 
+    },
+    paymentMode: {
+      type: String,
+      enum: ["Cash", "Card", "UPI"],
+      required: true,
+    },
+    transactionId: {
+      type: String
+    },
+    status: {
+      type: String,
+      enum: ["Paid", "Due"],
       required: true
-  },
+    },
   },
   { timestamps: true }
 );

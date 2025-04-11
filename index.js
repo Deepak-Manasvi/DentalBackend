@@ -3,24 +3,23 @@ const app = express();
 const cors = require('cors');
 const database = require("./Config/db")
 
-require("dotenv").config(); 
+require("dotenv").config();
 
-
+const userRoutes = require("./routes/userRoute");
 const receptionistRoutes = require("./routes/receptionistRoute");
-const adminRoutes = require("./routes/adminRoute");
-const patientRoute = require('./routes/patientRoutes');
-const appointmentRoute = require('./routes/appointmentsRoute');
-const checkinRoute = require('./routes/checkInRoute');
-const examinationRoute = require('./routes/examinationRoute');
-const procedureRoute = require('./routes/procedureRoute');
-const prescriptionRoute = require('./routes/prescriptionRoute');
-const billingRoute = require("./routes/billingRoute");
+const patientRoutes = require('./routes/patientRoute');
+const appointmentRoutes = require('./routes/appointmentsRoute');
+const checkinRoutes = require('./routes/checkInRoute');
+const examinationRoutes = require('./routes/examinationRoute');
+const procedureRoutes = require('./routes/procedureRoute');
+const prescriptionRoutes = require('./routes/prescriptionRoute');
+const billingRoutes = require("./routes/billingRoute");
 
 //cors
 const corsOptions = {
     origin: [
-    'http://localhost:5173',
-   
+        'http://localhost:5173',
+
     ],
     credentials: true,
     optionSuccessStatus: 200,
@@ -34,17 +33,16 @@ app.use(express.urlencoded({ extended: true })); // to parse form-data
 
 database.connectDb()
 
-
 // Routes
+app.use("/api/user", userRoutes);
 app.use("/api/receptionist", receptionistRoutes);
-app.use("/api", adminRoutes);
-app.use("/api/patients", patientRoute);
-app.use("/api", appointmentRoute);
-app.use("/api/checkin", checkinRoute);
-app.use("/api/examinations", examinationRoute);
-app.use("/api/procedures", procedureRoute);
-app.use("/api/prescriptions", prescriptionRoute);
-app.use("/api/billing", billingRoute);
+app.use("/api/patients", patientRoutes);
+app.use("/api/appointment", appointmentRoutes);
+app.use("/api/checkin", checkinRoutes);
+app.use("/api/examination", examinationRoutes);
+app.use("/api/procedure", procedureRoutes);
+app.use("/api/prescription", prescriptionRoutes);
+app.use("/api/billing", billingRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

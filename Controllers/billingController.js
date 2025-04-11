@@ -36,7 +36,7 @@ exports.getAllReceipts = async (req, res) => {
 };
 
 // ✅ Generate Invoice
-exports.generateInvoice = async (req, res) => {
+exports.generateInvoiceById = async (req, res) => {
   try {
     const billing = await Billing.findByIdAndUpdate(
       req.params.id,
@@ -54,7 +54,6 @@ exports.generateInvoice = async (req, res) => {
     res.status(500).json({ message: "Error generating invoice", error });
   }
 };
-
 
 // ✅ List All Invoices
 exports.getAllInvoices = async (req, res) => {

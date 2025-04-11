@@ -4,14 +4,13 @@ const mongoose = require("mongoose");
 exports.createExamination = async (req, res) => {
   try {
     const { patientId, uhid, appointmentId, type, teethDetails } = req.body;
-     // Required fields
-     if (!patientId || !uhid || !appointmentId || !type) {
+    // Required fields
+    if (!patientId || !uhid || !appointmentId || !type) {
       return res.status(400).json({ message: "patientId, uhid, appointmentId, and type are required." });
     }
 
-
-     // ObjectId validations
-     if (!mongoose.Types.ObjectId.isValid(patientId)) {
+    // ObjectId validations
+    if (!mongoose.Types.ObjectId.isValid(patientId)) {
       return res.status(400).json({ message: "Invalid patient ID." });
     }
 
