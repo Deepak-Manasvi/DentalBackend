@@ -8,13 +8,15 @@ const {
   getAppointmentById, 
   getPatientByUHID,
   updateCheckIn,
+  getAppointment,
    deletePatientByUHID
 } = require("../Controllers/appointmentController");
 
 router.get("/appointmentList", getAllAppointments);
+router.get("/getAppointment/:id", getAppointmentById);
 router.post("/addAppointment", createAppointment);
 router.patch("/updateCheckIn/:id", updateCheckIn);
-router.put("/update/:id", updateAppointment);
+router.patch("/update/:id", updateAppointment);
 router.delete("/delete/:id", deleteAppointment);
 
 module.exports = router;

@@ -69,7 +69,7 @@ exports.createAppointment = async (req, res) => {
 // ✅ Updated controller
 exports.getAppointmentById = async (req, res) => {
   try {
-    const appointment = await Appointment.findOne({ appId: req.params.id });
+    const appointment = await Appointment.findOne({ _id: req.params.id });
 
     if (!appointment) {
       return res.status(404).json({
@@ -124,7 +124,7 @@ exports.updateCheckIn = async (req, res) => {
 exports.updateAppointment = async (req, res) => {
   try {
     const updatedAppointment = await Appointment.findOneAndUpdate(
-      { appId: req.params.id },
+      { _id: req.params.id },
       req.body,
       { new: true }
     );
@@ -154,7 +154,7 @@ exports.updateAppointment = async (req, res) => {
 exports.deleteAppointment = async (req, res) => {
   try {
     const deletedAppointment = await Appointment.findOneAndDelete({
-      appId: req.params.id,
+      _id: req.params.id,
     });
 
     if (!deletedAppointment) {
