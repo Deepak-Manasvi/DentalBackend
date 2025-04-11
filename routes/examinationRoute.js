@@ -3,6 +3,6 @@ const router = express.Router();
 const { createExamination, getExaminationsByUHID } = require("../Controllers/examinationController");
 
 router.post("/createExamination", createExamination);
-router.get("/uhid/:uhid", getExaminationsByUHID);
+router.get("/getExaminationsByUHID/:uhid", getExaminationsByUHID);
 
 module.exports = router;

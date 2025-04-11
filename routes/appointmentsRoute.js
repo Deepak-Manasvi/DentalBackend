@@ -12,7 +12,7 @@ const {
 
 router.get("/getllAppointmentList", getAllAppointments);
 router.post("/createAppointment", createAppointment);
-router.get("/appointmentGetbyid/:id", getAppointmentById); // keep this
+router.get("/appointmentGetbyid/:id", getAppointmentById); 
 router.put("/updateAppointment/:id", updateAppointment);
 router.delete("/deleteAppointment/:id", deleteAppointment);
 router.get("/getPatientByUHID/:uhid", getPatientByUHID);
