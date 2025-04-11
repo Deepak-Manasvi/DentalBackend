@@ -69,6 +69,16 @@ exports.createAppointment = async (req, res) => {
 // ✅ Updated controller
 exports.getAppointmentById = async (req, res) => {
   try {
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: "Appointment not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      appointment,
+    });
     const appointment = await Appointment.findOne({ appId: req.params.id });
 
     if (!appointment) {

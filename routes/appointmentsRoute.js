@@ -4,18 +4,16 @@ const {
   getAllAppointments,
   createAppointment,
   updateAppointment,
-  deleteAppointment,
+  deleteAppointment,getAppointmentById,
   getAppointmentById, 
   getPatientByUHID,
    deletePatientByUHID
 } = require("../Controllers/appointmentController");
 
-router.get("/getllAppointmentList", getAllAppointments);
-router.post("/createAppointment", createAppointment);
-router.get("/appointmentGetbyid/:id", getAppointmentById); 
-router.put("/updateAppointment/:id", updateAppointment);
-router.delete("/deleteAppointment/:id", deleteAppointment);
-router.get("/getPatientByUHID/:uhid", getPatientByUHID);
-router.delete("/deletePatientUHID/:uhid", deletePatientByUHID);
+router.get("/appointmentList", getAllAppointments);
+router.post("/addAppointment", createAppointment);
+// router.get("/getbyid/:id", getAppointmentById);
+router.put("/update/:id", updateAppointment);
+router.delete("/delete/:id", deleteAppointment);
 
 module.exports = router;
