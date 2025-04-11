@@ -14,6 +14,7 @@ const prescriptionRoute = require('./routes/prescriptionRoute');
 const billingRoute = require("./routes/billingRoute");
 
 //cors
+app.use(cors());
 const corsOptions = {
     origin: [
         'http://localhost:5173',
