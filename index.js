@@ -12,13 +12,13 @@ const examinationRoute = require('./routes/examinationRoute');
 const procedureRoute = require('./routes/procedureRoute');
 const prescriptionRoute = require('./routes/prescriptionRoute');
 const billingRoute = require("./routes/billingRoute");
-const  staffRoute=require("./routes/staffRoute")
+const staffRoute = require("./routes/staffRoute")
 
 //cors
 app.use(cors());
 const corsOptions = {
     origin: [
-        'http://localhost:5174',
+        'http://localhost:5173',
 
     ],
     credentials: true,
