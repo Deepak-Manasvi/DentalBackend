@@ -86,9 +86,11 @@ const appointmentSchema = new mongoose.Schema(
       enum: ["Paid", "Due"],
       required: true,
     },
-    checkIn: {
+    IsPatient: {
       type: Boolean,
       default: false,
+      //appointment
+      //patient
     },
   },
   { timestamps: true }
