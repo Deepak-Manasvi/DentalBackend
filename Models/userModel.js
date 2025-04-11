@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "receptionist"],
     required: true
   },
+  token:{
+    type:String,
+  },
   username: {
     type: String,
     unique: true

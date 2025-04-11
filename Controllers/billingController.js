@@ -2,7 +2,7 @@ const Billing = require("../Models/billingModel.js");
 const Appointment = require("../Models/appointmentModels.js");
 const mongoose = require("mongoose");
 
-// ✅ Create Receipt
+// Create Receipt
 exports.createReceipt = async (req, res) => {
   try {
     const receiptNumber = `RECPT-${new Date().toISOString().replace(/[-:.TZ]/g, "")}`;
@@ -25,7 +25,7 @@ exports.createReceipt = async (req, res) => {
   }
 };
 
-// ✅ Get All Receipts
+// Get All Receipts
 exports.getAllReceipts = async (req, res) => {
   try {
     const data = await Billing.find().populate("patientId appointmentId");
@@ -35,7 +35,7 @@ exports.getAllReceipts = async (req, res) => {
   }
 };
 
-// ✅ Generate Invoice
+// Generate Invoice
 exports.generateInvoiceById = async (req, res) => {
   try {
     const billing = await Billing.findByIdAndUpdate(
@@ -55,7 +55,7 @@ exports.generateInvoiceById = async (req, res) => {
   }
 };
 
-// ✅ List All Invoices
+// List All Invoices
 exports.getAllInvoices = async (req, res) => {
   try {
     const invoices = await Billing.find({ invoiceGenerated: true }).populate("patientId appointmentId");

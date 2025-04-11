@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Teeth details schema
 const teethDetailsSchema = new mongoose.Schema({
   toothNumber: {
     type: Number,
@@ -18,12 +19,8 @@ const teethDetailsSchema = new mongoose.Schema({
   }
 }, { _id: false });
 
+// Main Examination schema
 const examinationSchema = new mongoose.Schema({
-  patientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Patient",
-    required: [true, "Patient ID is required"]
-  },
   uhid: {
     type: String,
     required: [true, "UHID is required"],
@@ -57,7 +54,8 @@ const examinationSchema = new mongoose.Schema({
   advice: {
     type: String,
     trim: true
-  }
+  },
+ 
 }, { timestamps: true });
 
 module.exports = mongoose.model("Examination", examinationSchema);

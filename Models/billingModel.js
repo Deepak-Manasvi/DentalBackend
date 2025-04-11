@@ -22,11 +22,6 @@ const billingSchema = new mongoose.Schema({
     required: [true, "Receipt number is required"],
     unique: true
   },
-  patientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Patient",
-    required: [true, "Patient ID is required"]
-  },
   appointmentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Appointment",
