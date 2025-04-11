@@ -95,7 +95,7 @@ exports.updateCheckIn = async (req, res) => {
     const appid = req.params.id;
     const appointment = await Appointment.findOneAndUpdate(
       { _id: appid },
-      { IsPatient: true },
+      { isPatient: true },
       { new: true }
     );
 
