@@ -38,28 +38,27 @@ const appointmentSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    
-    healthDetails: {
-      medicalHistory: [
-        {
-          type: String,
-        },
-      ],
-      allergies: [
-        {
-          type: String,
-        },
-      ],
-      weight: {
-        type: Number,
+
+    medicalHistory: [
+      {
+        type: String,
       },
-      bp: {
-        systolic: { type: Number },
-        diastolic: { type: Number },
+    ],
+    allergies: [
+      {
+        type: String,
       },
-      spo2: { type: Number },
-      bloodGroup: { type: String },
+    ],
+    weight: {
+      type: Number,
     },
+    bp: {
+      systolic: { type: Number },
+      diastolic: { type: Number },
+    },
+    spo2: { type: Number },
+    bloodGroup: { type: String },
+
     appointmentDate: {
       type: Date,
     },
@@ -70,23 +69,27 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    opdAmount: { 
-      type: Number,  
-      required: false
-  },
-  paymentMode: {
-    type: String,
-    enum: ["Cash", "Card", "UPI"],
-    required: true,
-  },
-  transactionId: { 
-      type: String 
-  },
-  status: { 
-      type: String, 
-      enum: ["Paid", "Due"], 
-      required: true
-  },
+    opdAmount: {
+      type: Number,
+      required: false,
+    },
+    paymentMode: {
+      type: String,
+      enum: ["Cash", "Card", "UPI"],
+      required: true,
+    },
+    transactionId: {
+      type: String,
+    },
+    status: {
+      type: String,
+      enum: ["Paid", "Due"],
+      required: true,
+    },
+    checkIn: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

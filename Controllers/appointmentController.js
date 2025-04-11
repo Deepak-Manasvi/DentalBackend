@@ -20,7 +20,7 @@ exports.getAllAppointments = async (req, res) => {
 
 // ✅ POST - Book Appointment
 const generateUHID = () => {
-  return 'UHID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+  return "UHID-" + Math.random().toString(36).substr(2, 9).toUpperCase();
 };
 
 exports.createAppointment = async (req, res) => {
@@ -90,6 +90,35 @@ exports.getAppointmentById = async (req, res) => {
     });
   }
 };
+exports.updateCheckIn = async (req, res) => {
+  try {
+    const appid = req.params.id;
+    const appointment = await Appointment.findOneAndUpdate(
+      { _id: appid },
+      { checkIn: true },
+      { new: true }
+    );
+
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Check-in updated successfully",
+      appointment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error updating check-in",
+      error: error.message,
+    });
+  }
+};
 
 // ✅ PUT - Update Appointment
 exports.updateAppointment = async (req, res) => {
@@ -99,7 +128,6 @@ exports.updateAppointment = async (req, res) => {
       req.body,
       { new: true }
     );
-    
 
     if (!updatedAppointment) {
       return res.status(404).json({
@@ -125,7 +153,9 @@ exports.updateAppointment = async (req, res) => {
 // ✅ DELETE - Cancel Appointment
 exports.deleteAppointment = async (req, res) => {
   try {
-    const deletedAppointment = await Appointment.findOneAndDelete({ appId: req.params.id });
+    const deletedAppointment = await Appointment.findOneAndDelete({
+      appId: req.params.id,
+    });
 
     if (!deletedAppointment) {
       return res.status(404).json({
@@ -173,7 +203,9 @@ exports.getPatientByUHID = async (req, res) => {
 
 exports.deletePatientByUHID = async (req, res) => {
   try {
-    const deletedPatient = await Appointment.findOneAndDelete({ uhid: req.params.uhid });
+    const deletedPatient = await Appointment.findOneAndDelete({
+      uhid: req.params.uhid,
+    });
 
     if (!deletedPatient) {
       return res.status(404).json({
