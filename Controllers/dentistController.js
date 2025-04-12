@@ -1,4 +1,4 @@
-const Dentist = require("../Models/branchModel");
+const Dentist = require("../Models/dentistModel");
 
 exports.createDentist = async (req, res) => {
     try {
