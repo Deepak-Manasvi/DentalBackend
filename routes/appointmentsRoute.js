@@ -5,12 +5,11 @@ const {
   createAppointment,
   updateAppointment,
   deleteAppointment,
-  getAppointmentById, 
-  getAppointmentByAppId,
+  getAppointmentById,
   getPatientByUHID,
   updateCheckIn,
-  getAppointment,
-   deletePatientByUHID
+  deletePatientByUHID,
+  getAppointmentByAppId
 } = require("../Controllers/appointmentController");
 
 router.get("/appointmentList", getAllAppointments);
