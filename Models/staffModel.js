@@ -1,15 +1,24 @@
 const mongoose = require('mongoose');
 
 const staffSchema = new mongoose.Schema({
-  staffId: {
+  name: {
     type: String,
   },
-  fullName: String,
-  email: String,
-  password: String,
-  contact: String,
-  address: String,
-  username: String
+  userName: {
+    type: String,
+  },
+  password: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
+  email: {
+    type: String,
+  },
+  contact: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model('Staff', staffSchema);

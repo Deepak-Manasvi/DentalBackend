@@ -1,5 +1,4 @@
 const Appointment = require("../Models/appointmentModels");
-const mongoose = require("mongoose");
 
 // ✅ GET - All Appointments
 exports.getAllAppointments = async (req, res) => {

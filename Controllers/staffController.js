@@ -2,37 +2,109 @@ const Staff = require('../Models/staffModel');
 
 exports.createStaff = async (req, res) => {
   try {
-    const staff = new Staff(req.body);
-    await staff.save();
-    res.status(201).json(staff);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const staff = await Staff.create(req.body);
+    res.status(201).json({
+      status: 'success',
+      data: {
+        staff,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      message: error.message,
+    });
   }
-};
-
+}
 exports.getAllStaff = async (req, res) => {
   try {
-    const staffList = await Staff.find();
-    res.json(staffList);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const staff = await Staff.find();
+    res.status(200).json({
+      status: 'success',
+      results: staff.length,
+      data: {
+        staff,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      message: error.message,
+    });
+  }
+}
+exports.getstaffById = async (req, res) => {
+  try {
+    const staff = await Staff.findById(req.params.id);
+    if (!staff) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'No staff found with that ID',
+      });
+    }
+    res.status(200).json({
+      status: 'success',
+      data: {
+        staff,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      message: error.message,
+    });
+  }
+}
+
+exports.updateStaffById = async (req, res) => {
+  try {
+    const updatedStaff = await Staff.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true, // return the modified document
+        runValidators: true, // validate before saving
+      }
+    );
+
+    if (!updatedStaff) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'No staff found with that ID',
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        staff: updatedStaff,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      message: error.message,
+    });
   }
 };
 
-exports.updateStaff = async (req, res) => {
+exports.deleteStaffById = async (req, res) => {
   try {
-    const updated = await Staff.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updated);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const staff = await Staff.findByIdAndDelete(req.params.id);
+    if (!staff) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'No staff found with that ID',
+      });
+    }
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      message: error.message,
+    });
   }
-};
-
-exports.deleteStaff = async (req, res) => {
-  try {
-    await Staff.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Staff deleted successfully' });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
+} 

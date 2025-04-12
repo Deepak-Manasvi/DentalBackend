@@ -3,13 +3,15 @@ const router = express.Router();
 const {
   createStaff,
   getAllStaff,
-  updateStaff,
-  deleteStaff
+  getstaffById,
+  updateStaffById,
+  deleteStaffById
 } = require('../Controllers/staffController');
 
 router.post('/createstaff', createStaff);
-router.get('/getallstaff', getAllStaff);
-router.put('/updatestaff:id', updateStaff);
-router.delete('/deletestaff:id', deleteStaff);
+router.get('/getAllStaff', getAllStaff);
+router.get('/getstaffById/:id', getstaffById);
+router.patch('/updatestaffById/:id', updateStaffById);
+router.delete('/deletestaffById/:id', deleteStaffById);
 
 module.exports = router;
