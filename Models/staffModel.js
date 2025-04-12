@@ -4,7 +4,7 @@ const staffSchema = new mongoose.Schema({
   name: {
     type: String,
   },
-  userName: {
+  username: {
     type: String,
   },
   password: {
@@ -16,7 +16,7 @@ const staffSchema = new mongoose.Schema({
   email: {
     type: String,
   },
-  contact: {
+  contactNumber: {
     type: String,
   },
 });

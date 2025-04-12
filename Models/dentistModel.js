@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const dentistSchema = new mongoose.Schema({
   name: {
@@ -18,4 +18,4 @@ const dentistSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Dentist', dentistSchema);
+module.exports = mongoose.model("Dentist", dentistSchema);
