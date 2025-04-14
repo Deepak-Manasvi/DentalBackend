@@ -1,5 +1,5 @@
 const Chief = require("../Models/chiefModel");
-const Examination = require("../Models/examinationModel");
+const Examination = require("../Models/examination");
 const Medicine = require("../Models/medicineModel");
 const Treatment = require("../Models/treatmentModel");
 
