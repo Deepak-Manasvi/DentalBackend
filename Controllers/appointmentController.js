@@ -18,14 +18,45 @@ exports.getAllAppointments = async (req, res) => {
 };
 
 // ✅ POST - Book Appointment
-const generateUHID = () => {
-  return "UHID-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+const generateUHID = async () => {
+  // Find the latest appointment to get the next sequential number
+  const latestAppointment = await Appointment.findOne().sort({ createdAt: -1 });
+
+  let sequentialNumber = 1; // Default start
+
+  if (latestAppointment) {
+    // If there's an existing UHID, extract the number and increment
+    const existingUhid = latestAppointment.uhid;
+    if (existingUhid) {
+      const match = existingUhid.match(/UHID-(\d+)/);
+      if (match && match[1]) {
+        sequentialNumber = parseInt(match[1]) + 1;
+      }
+    }
+  }
+
+  // Format with padded zeros (e.g., 001, 012, 123)
+  const paddedNumber = String(sequentialNumber).padStart(3, "0");
+  return `UHID-${paddedNumber}`;
+};
+
+const getNextAppointmentId = async () => {
+  // Get the latest appointment to determine the next appId
+  const latestAppointment = await Appointment.findOne().sort({ createdAt: -1 });
+
+  // Start with 1 if no appointments exist
+  if (!latestAppointment || !latestAppointment.appId) {
+    return 1;
+  }
+
+  // Parse the existing ID as a number and increment
+  const currentId = parseInt(latestAppointment.appId);
+  return isNaN(currentId) ? 1 : currentId + 1;
 };
 
 exports.createAppointment = async (req, res) => {
   try {
     const requiredFields = [
-      "appId",
       "patientType",
       "patientName",
       "gender",
@@ -46,8 +77,17 @@ exports.createAppointment = async (req, res) => {
       }
     }
 
-    const uhid = generateUHID();
-    const newAppointment = new Appointment({ ...req.body, uhid });
+    // Generate sequential UHID and appointment ID
+    const uhid = await generateUHID();
+    const appId = await getNextAppointmentId();
+
+    // Create new appointment with auto-generated IDs
+    const newAppointment = new Appointment({
+      ...req.body,
+      uhid,
+      appId,
+    });
+
     const appointmentDetails = await newAppointment.save();
 
     return res.status(201).json({
@@ -65,7 +105,6 @@ exports.createAppointment = async (req, res) => {
 };
 
 // ✅ GET - Appointment by ID
-// ✅ Updated controller
 exports.getAppointmentById = async (req, res) => {
   try {
     const appointment = await Appointment.findOne({ _id: req.params.id });
@@ -89,6 +128,7 @@ exports.getAppointmentById = async (req, res) => {
     });
   }
 };
+
 exports.getAppointmentByAppId = async (req, res) => {
   try {
     const appointment = await Appointment.findOne({ appId: req.params.id });
@@ -112,6 +152,7 @@ exports.getAppointmentByAppId = async (req, res) => {
     });
   }
 };
+
 exports.updateCheckIn = async (req, res) => {
   try {
     const appid = req.params.id;
@@ -145,6 +186,14 @@ exports.updateCheckIn = async (req, res) => {
 // ✅ PUT - Update Appointment
 exports.updateAppointment = async (req, res) => {
   try {
+    // Prevent updating of auto-generated IDs
+    if (req.body.appId || req.body.uhid) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot update appId or uhid fields",
+      });
+    }
+
     const updatedAppointment = await Appointment.findOneAndUpdate(
       { _id: req.params.id },
       req.body,

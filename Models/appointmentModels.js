@@ -62,13 +62,13 @@ const appointmentSchema = new mongoose.Schema(
     appointmentDate: {
       type: Date,
     },
-    appointmentTime: {
+    appointmentTime: [{
       type: String,
-    },
-    doctorName: {
+    }],
+    doctorName:[ {
       type: String,
       required: true,
-    },
+    }],
     opdAmount: {
       type: Number,
       required: false,
