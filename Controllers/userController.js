@@ -82,10 +82,10 @@ exports.userLogin = async (req, res) => {
 };
 
 exports.userRegister = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, password, role, username } = req.body;
 
   // Field validation
-  if (!email || !password || !role) {
+  if (!email || !password || !role || !username) {
     return res.status(400).json({
       status: 400,
       message: "Validation error: Email, password, and role are required."
@@ -133,6 +133,7 @@ exports.userRegister = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      username
     });
 
     await newUser.save();
