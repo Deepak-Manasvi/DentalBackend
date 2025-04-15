@@ -92,6 +92,12 @@ const appointmentSchema = new mongoose.Schema(
       //appointment
       //patient
     },
+    receipt: {
+      receiptNumber: { type: String },
+      receiptDate: { type: Date },
+      receiptUrl: { type: String }, // if you store the receipt as a PDF/image on cloud
+    },
+    
   },
   { timestamps: true }
 );

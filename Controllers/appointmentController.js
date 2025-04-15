@@ -297,3 +297,53 @@ exports.deletePatientByUHID = async (req, res) => {
     });
   }
 };
+
+
+exports.addOrUpdateReceipt = async (req, res) => {
+  try {
+    const { id } = req.params; // This will be appId
+    const { patientData } = req.body;
+    const pdfFile = req.file;
+
+    if (!patientData || !pdfFile) {
+      return res.status(400).json({
+        success: false,
+        message: "Patient data and PDF file are required",
+      });
+    }
+
+    const patient = JSON.parse(patientData);
+
+    const receiptData = {
+      receiptDate: new Date(),
+      receiptUrl: `/uploads/${pdfFile.filename}`,
+    };
+
+    // Find appointment by appId, not by _id
+    const updatedAppointment = await Appointment.findOneAndUpdate(
+      { appId: id }, // Search by appId
+      { receipt: receiptData },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedAppointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Receipt added/updated successfully",
+      updatedAppointment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error updating receipt",
+      error: error.message,
+    });
+  }
+};
+
