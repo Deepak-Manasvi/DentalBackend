@@ -3,7 +3,7 @@ const { dashboardDetails, dashboard } = require("../Controllers/dashboardControl
 const { auth, isAdmin, isReceptionist } = require("../middlewares/auth");
 const router = express.Router();
 
-router.get('/admin/dashboardDetails', auth, isAdmin, dashboardDetails)
-router.get('/receptionist/dashboardDetails',auth, isReceptionist, dashboard)
+router.get('/admin/dashboardDetails',  dashboardDetails)
+router.get('/receptionist/dashboardDetails',dashboard)
 
 module.exports = router;
