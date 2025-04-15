@@ -2,6 +2,7 @@ const Appointment = require( "../Models/appointmentModels");
 const Dentist = require( "../Models/dentistModel");
 const { getLastMonth, getSevenDaysAgo, getThreeMonthsAgo, getTodayRange } = require( "../utils/date");
 
+//admin
 exports.dashboardDetails = async(req,res) => {
     try{ 
         //doctors
@@ -97,6 +98,41 @@ exports.dashboardDetails = async(req,res) => {
             lastMonthPatients,
             last3MonthsPatients,
             dailyPatientCounts,
+        });
+    }catch(error) {
+        return res.status(400).json({
+            success:false,
+            message:`Error in fetching detail: ${error.message}`
+        })
+    }
+}
+
+//receptionist
+exports.dashboard = async(req,res) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    try{ 
+        //doctors
+       
+
+        //patients
+        const totalPatients = await Appointment.countDocuments({isPatient: true});
+       
+        
+          // Appointments
+        const totalAppointments = await Appointment.countDocuments();
+        const upcomingAppointments = await Appointment.find({
+            appointmentDate: { $gte: today }
+          }).select('doctorName patientName mobileNumber paymentMode opdAmount');
+       
+
+
+        return res.status(200).json({
+            success: true,
+            totalAppointments,
+            upcomingAppointments,
+            totalPatients,
+          
         });
     }catch(error) {
         return res.status(400).json({
