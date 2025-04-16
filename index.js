@@ -16,7 +16,8 @@ const staffRoute = require("./routes/staffRoute");
 const branchRoute = require("./routes/branchRoute");
 const dentistRoute = require("./routes/dentistRoute");
 const servicesRoute = require("./routes/servicesRoute");
-const dashboardRoute = require("./routes/dashboardRoute")
+const dashboardRoute = require("./routes/dashboardRoute");
+const contactRoutes = require("./routes/contactRoutes")
 
 //cors
 app.use(cors());
@@ -49,7 +50,8 @@ app.use("/api/staff", staffRoute);
 app.use("/api/branch", branchRoute);
 app.use("/api/dentist", dentistRoute);
 app.use("/api/services", servicesRoute);
-app.use("/api", dashboardRoute)
+app.use("/api", dashboardRoute);
+app.use('/api/contacts', contactRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
