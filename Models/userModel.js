@@ -1,9 +1,21 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+  accountId: {
+    type: String,
+  },
+  firstName: {
+    type: String,
+  },
+  lastName: {
+    type: String,
+  },
   email: {
     type: String,
     unique: true
+  },
+  phone: {
+    type: String,
   },
   password: {
     type: String,
@@ -14,14 +26,24 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "receptionist"],
     required: true
   },
-  token:{
-    type:String,
-  },
-  username: {
+  image: {
     type: String,
-    unique: true
   },
-});
+  status: {
+    type: String,
+    enum: ["active", "inactive"],
+    default: "inactive",
+  },
+  otp: {
+    type: String,
+  },
+  token: {
+    type: String,
+  },
+  isVerified: {
+    type: Boolean,
+  },
+}, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
 
