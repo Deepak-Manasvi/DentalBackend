@@ -29,7 +29,7 @@ app.use(cors());
 const corsOptions = {
     origin: [
         'http://localhost:5173',
-
+        'https://dental-w7jc.onrender.com'
     ],
     credentials: true,
     optionSuccessStatus: 200,
