@@ -23,8 +23,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["admin", "receptionist"],
-    required: true
+    enum: ["admin", "receptionist"]
   },
   image: {
     type: String,
