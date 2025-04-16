@@ -4,6 +4,10 @@ const cors = require('cors');
 const database = require("./Config/db")
 
 require("dotenv").config();
+const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
+
+const { cloudinaryConnect } = require("./config/cloudinary");
 
 const userRoutes = require("./routes/userRoute");
 const receptionistRoutes = require("./routes/receptionistRoute");
@@ -17,6 +21,7 @@ const branchRoute = require("./routes/branchRoute");
 const dentistRoute = require("./routes/dentistRoute");
 const servicesRoute = require("./routes/servicesRoute");
 const dashboardRoute = require("./routes/dashboardRoute")
+const planRouter = require("./routes/planRoute");
 
 //cors
 app.use(cors());
@@ -36,7 +41,19 @@ app.use(express.json()); // to parse JSON
 app.use(express.urlencoded({ extended: true })); // to parse form-data
 
 database.connectDb()
+app.use(express.json());
+app.use("/uploads", express.static("uploads"));
+app.use(bodyParser.json());
+app.use(cors());
 
+app.use(
+    fileUpload({
+        useTempFiles: true,
+        tempFileDir: "/tmp/",
+    })
+);
+
+cloudinaryConnect();
 // Routes
 app.use("/api/user", userRoutes);
 app.use("/api/receptionist", receptionistRoutes);
@@ -49,7 +66,8 @@ app.use("/api/staff", staffRoute);
 app.use("/api/branch", branchRoute);
 app.use("/api/dentist", dentistRoute);
 app.use("/api/services", servicesRoute);
-app.use("/api", dashboardRoute)
+app.use("/api", dashboardRoute);
+app.use("/api/plan", planRouter);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
