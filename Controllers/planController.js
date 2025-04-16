@@ -61,6 +61,7 @@ const purchasePlan = async (req, res) => {
           planAmount,
           planType,
           address,
+          role: "admin",
           status: "inactive",
       });
       await newUser.save();
