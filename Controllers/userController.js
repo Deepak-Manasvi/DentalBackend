@@ -13,14 +13,6 @@ exports.userLogin = async (req, res) => {
     });
   }
 
-  // Password length check
-  if (password.length < 6) {
-    return res.status(400).json({
-      status: 400,
-      message: "Validation error: Password must be at least 6 characters long."
-    });
-  }
-
   // Role check
   const allowedRoles = ["admin", "receptionist"];
   if (!allowedRoles.includes(role)) {
