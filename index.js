@@ -7,7 +7,7 @@ require("dotenv").config();
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 
-const { cloudinaryConnect } = require("./config/cloudinary");
+const { cloudinaryConnect } = require("./Config/cloudinary");
 
 const userRoutes = require("./routes/userRoute");
 const receptionistRoutes = require("./routes/receptionistRoute");
