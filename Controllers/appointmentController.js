@@ -298,32 +298,22 @@ exports.deletePatientByUHID = async (req, res) => {
   }
 };
 
-
-exports.addOrUpdateReceipt = async (req, res) => {
+exports.updateReceiptGenerate = async (req, res) => {
   try {
-    const { id } = req.params; // This will be appId
-    const { patientData } = req.body;
-    const pdfFile = req.file;
+    const { id } = req.params; // This is appId
+    const { receiptGenerate } = req.body;
 
-    if (!patientData || !pdfFile) {
+    if (typeof receiptGenerate !== 'boolean') {
       return res.status(400).json({
         success: false,
-        message: "Patient data and PDF file are required",
+        message: "receiptGenerate must be a boolean (true or false)",
       });
     }
 
-    const patient = JSON.parse(patientData);
-
-    const receiptData = {
-      receiptDate: new Date(),
-      receiptUrl: `/uploads/${pdfFile.filename}`,
-    };
-
-    // Find appointment by appId, not by _id
     const updatedAppointment = await Appointment.findOneAndUpdate(
-      { appId: id }, // Search by appId
-      { receipt: receiptData },
-      { new: true } // Return the updated document
+      { appId: id },
+      { receiptGenerate },
+      { new: true }
     );
 
     if (!updatedAppointment) {
@@ -335,13 +325,13 @@ exports.addOrUpdateReceipt = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Receipt added/updated successfully",
+      message: "receiptGenerate updated successfully",
       updatedAppointment,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error updating receipt",
+      message: "Error updating receiptGenerate",
       error: error.message,
     });
   }

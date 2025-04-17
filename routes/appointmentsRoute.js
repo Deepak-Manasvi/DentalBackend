@@ -13,7 +13,7 @@ const {
   updateCheckIn,
   deletePatientByUHID,
   getAppointmentByAppId,
-  addOrUpdateReceipt
+  updateReceiptGenerate
 } = require("../Controllers/appointmentController");
 
 router.get("/appointmentList", getAllAppointments);
@@ -23,24 +23,7 @@ router.post("/addAppointment", createAppointment);
 router.patch("/updateCheckIn/:id", updateCheckIn);
 router.patch("/update/:id", updateAppointment);
 router.delete("/delete/:id", deleteAppointment);
+router.put("/appointments/updateReceiptGenerate/:id", updateReceiptGenerate);
 
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, `receipt-${Date.now()}${ext}`);
-  },
-});
-
-const upload = multer({ storage });
-
-router.put(
-  "/receipt/:id",
-  upload.single("pdf"),
-  addOrUpdateReceipt
-);
 
 module.exports = router;
