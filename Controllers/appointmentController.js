@@ -303,6 +303,7 @@ exports.updateReceiptGenerate = async (req, res) => {
     const { id } = req.params; // This is appId
     const { receiptGenerate } = req.body;
 
+    console.log(id)
     if (typeof receiptGenerate !== 'boolean') {
       return res.status(400).json({
         success: false,

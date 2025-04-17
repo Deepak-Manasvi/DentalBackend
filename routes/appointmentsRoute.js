@@ -23,7 +23,7 @@ router.post("/addAppointment", createAppointment);
 router.patch("/updateCheckIn/:id", updateCheckIn);
 router.patch("/update/:id", updateAppointment);
 router.delete("/delete/:id", deleteAppointment);
-router.put("/appointments/updateReceiptGenerate/:id", updateReceiptGenerate);
+router.put("/updateReceiptGenerate/:id", updateReceiptGenerate);
 
 
 module.exports = router;
