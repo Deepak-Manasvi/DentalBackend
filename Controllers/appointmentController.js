@@ -338,3 +338,44 @@ exports.updateReceiptGenerate = async (req, res) => {
   }
 };
 
+exports.updateInvoiceGenerate = async (req, res) => {
+  try {
+    const { id } = req.params; // This is appId
+    const { InvoiceGenerate } = req.body;
+
+    console.log(id)
+    if (typeof receiptGenerate !== 'boolean') {
+      return res.status(400).json({
+        success: false,
+        message: "InvoiceGenerate must be a boolean (true or false)",
+      });
+    }
+
+    const updatedAppointment = await Appointment.findOneAndUpdate(
+      { appId: id },
+      { InvoiceGenerate },
+      { new: true }
+    );
+
+    if (!updatedAppointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "InvoiceGenerate updated successfully",
+      updatedAppointment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error updating InvoiceGenerate",
+      error: error.message,
+    });
+  }
+};
+
+

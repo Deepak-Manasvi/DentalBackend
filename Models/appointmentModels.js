@@ -96,7 +96,7 @@ const appointmentSchema = new mongoose.Schema(
       type: Boolean,
       default: false, // Default to false unless explicitly updated
     },
-    receiptInvoice: {
+    InvoiceGenerate: {
       type: Boolean,
       default: false, // Default to false unless explicitly updated
     },

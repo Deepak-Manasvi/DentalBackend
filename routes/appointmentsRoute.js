@@ -13,7 +13,8 @@ const {
   updateCheckIn,
   deletePatientByUHID,
   getAppointmentByAppId,
-  updateReceiptGenerate
+  updateReceiptGenerate,
+  updateInvoiceGenerate
 } = require("../Controllers/appointmentController");
 
 router.get("/appointmentList", getAllAppointments);
@@ -24,6 +25,7 @@ router.patch("/updateCheckIn/:id", updateCheckIn);
 router.patch("/update/:id", updateAppointment);
 router.delete("/delete/:id", deleteAppointment);
 router.put("/updateReceiptGenerate/:id", updateReceiptGenerate);
+router.put("/updateInvoiceGenerate/:id", updateInvoiceGenerate);
 
 
 module.exports = router;
