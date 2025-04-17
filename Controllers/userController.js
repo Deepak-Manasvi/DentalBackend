@@ -394,3 +394,167 @@ exports.verifyOtp = async (req, res) => {
   }
 };
 
+exports.getAllUser = async (req, res) => {
+  try {
+    const user = await User.find({});
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving the user.",
+      error: error.message,
+    });
+  }
+}
+
+exports.getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving the user.",
+      error: error.message,
+    });
+  }
+};
+
+exports.updateUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { firstName, lastName, email, phone, status } = req.body;
+    const existingUser = await User.findById(id);
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    const isStatusChanged = existingUser.status !== status;
+    const updates = { firstName, lastName, email, phone, status };
+    const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
+    if (isStatusChanged) {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      const mailOptions = {
+        from: { name: "BINARY FUNDING", address: process.env.EMAIL_USERNAME },
+        to: email,
+        subject: "Account Status Update",
+        html: `
+                  <!DOCTYPE html>
+                  <html>
+                  <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Account Status Update</title>
+                    <style>
+                      body { font-family: 'Arial', sans-serif; background-color: #f9fafb; padding: 20px; }
+                      .container { max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 12px; padding: 40px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+                      .header { text-align: center; }
+                      h2 { color: #2563eb; font-size: 26px; font-weight: bold; text-align: center; }
+                      .message { font-size: 16px; color: #374151; margin-bottom: 20px; }
+                      .status { font-size: 18px; font-weight: bold; color: ${status === "active" ? "#10b981" : "#ef4444"}; }
+                      .footer { text-align: center; color: #6b7280; font-size: 12px; margin-top: 30px; padding-top: 15px; border-top: 1px solid #e5e7eb; }
+                    </style>
+                  </head>
+                  <body>
+                    <div class="container">
+                      <div class="header">
+                        <h2>Account Status Updated</h2>
+                      </div>
+                      <p class="message">Hello ${firstName},</p>
+                      <p class="message">Your account status has been updated to: <span class="status">${status.toUpperCase()}</span></p>
+                      <p class="message">If you have any questions, please contact support.</p>
+                      <div class="footer">
+                        <p>This is an automated message. Please do not reply.</p>
+                        <p>&copy; ${new Date().getFullYear()} Binary Funding. All rights reserved.</p>
+                      </div>
+                    </div>
+                  </body>
+                  </html>
+              `,
+      };
+      await transporter.sendMail(mailOptions);
+    }
+    res.status(200).json({ message: "User updated successfully.", updatedUser });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the user.",
+      error: error.message,
+    });
+  }
+};
+
+exports.deleteUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "User Delete Successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving the user.",
+      error: error.message,
+    });
+  }
+}
+
+exports.getAdminById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await Admin.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Admin not found.",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving the user.",
+      error: error.message,
+    });
+  }
+};
+
