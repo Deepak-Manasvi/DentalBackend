@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
-const mailSender = async(email, title, body) => {
-    try{
+const mailSender = async (email, title, body) => {
+    try {
         let transporter = nodemailer.createTransport({
             service: "gmail",
             host: "smtp.gmail.com",
@@ -15,14 +15,14 @@ const mailSender = async(email, title, body) => {
 
         let info = await transporter.sendMail({
             from: { name: "Dental Guru", address: process.env.EMAIL_USERNAME },
-            to:`${email}`,
-            subject:`${title}`,
-            html:`${body}`,
+            to: `${email}`,
+            subject: `${title}`,
+            html: `${body}`,
         })
         // console.log("INFO", info);
         return info;
-         
-    }catch(error){
+
+    } catch (error) {
         console.error(error.message);
     }
 }
