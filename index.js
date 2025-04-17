@@ -41,12 +41,11 @@ app.use(cors(corsOptions));
 // Middleware
 app.use(express.json()); // to parse JSON
 app.use(express.urlencoded({ extended: true })); // to parse form-data
-
-database.connectDb()
-app.use(express.json());
-app.use("/uploads", express.static("uploads"));
 app.use(bodyParser.json());
-app.use(cors());
+database.connectDb()
+
+app.use("/uploads", express.static("uploads"));
+
 
 app.use(
     fileUpload({
@@ -72,6 +71,8 @@ app.use("/api", dashboardRoute);
 app.use('/api/contacts', contactRoutes);
 app.use("/api/plan", planRouter);
 app.use("/api/business", businessRoutes);
+
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

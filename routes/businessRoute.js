@@ -10,14 +10,14 @@ const {
 } = require("../Controllers/businessController");
 
 // Multer Setup
-const storage = multer.diskStorage({});
-const upload = multer({ storage });
+// const storage = multer.diskStorage({});
+// const upload = multer({ storage });
 
 // Routes
-router.post("/create-business", upload.single("businessPhoto"), createBusiness);
+router.post("/create-business", createBusiness);
 router.get("/getbusiness", getBusinesses);
 router.get("/getbusinessBy:id", getBusinessById);
-router.put("/updatebusiness:id", upload.single("businessPhoto"), updateBusiness);
+router.put("/updatebusiness:id", updateBusiness);
 router.delete("/deletebusiness:id", deleteBusiness);
 
 module.exports = router;

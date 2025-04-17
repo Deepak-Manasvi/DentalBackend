@@ -1,16 +1,19 @@
-const Business = require("..");
-const cloudinary = require("../Config/cloudinary");
+const Business = require("../Models/businessModal")
+const cloudinary = require("cloudinary").v2
 
 // Create
 exports.createBusiness = async (req, res) => {
   try {
     let photo = null;
-
-    if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path);
+    // console.log("entered")
+    console.log(req.files.businessPhoto)
+    if (req.files && req.files.businessPhoto) {
+      const file = req.files.businessPhoto
+      const result = await cloudinary.uploader.upload(file.tempFilePath);
+      // console.log("result",result)
       photo = { url: result.secure_url, public_id: result.public_id };
     }
-
+    // console.log("photo",photo)   
     const business = new Business({ ...req.body, businessPhoto: photo });
     await business.save();
     res.status(201).json(business);
@@ -45,11 +48,12 @@ exports.updateBusiness = async (req, res) => {
     const business = await Business.findById(req.params.id);
     if (!business) return res.status(404).json({ error: "Not found" });
 
-    if (req.file) {
+    if (req.files.businessPhoto) {
       if (business.businessPhoto?.public_id) {
         await cloudinary.uploader.destroy(business.businessPhoto.public_id);
       }
-      const result = await cloudinary.uploader.upload(req.file.path);
+      const file = req.files.businessPhoto
+      const result = await cloudinary.uploader.upload(file.tempFilePath);
       req.body.businessPhoto = {
         url: result.secure_url,
         public_id: result.public_id,
