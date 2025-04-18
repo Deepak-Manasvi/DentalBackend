@@ -6,14 +6,14 @@ const nodemailer = require('nodemailer');
 
 exports.userLogin = async (req, res) => {
   const { email, password, role } = req.body;
-
+ console.log(req.body)
   // Field validation
-  if (!email || !password || !role) {
-    return res.status(400).json({
-      status: 400,
-      message: "Validation error: Email, password, and role are required."
-    });
-  }
+  // if (!email || !password || !role) {
+  //   return res.status(400).json({
+  //     status: 400,
+  //     message: "Validation error: Email, password, and role are required."
+  //   });
+  // }
 
   // Role check
   const allowedRoles = ["admin", "receptionist"];
@@ -82,7 +82,7 @@ exports.userRegister = async (req, res) => {
   if (!email || !password || !role || !username) {
     return res.status(400).json({
       status: 400,
-      message: "Validation error: Email, password, and role are required."
+      message: "Validation error: Email, password, username and role are required."
     });
   }
 

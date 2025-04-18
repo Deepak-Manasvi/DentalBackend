@@ -1,4 +1,5 @@
-const Business = require("../Models/businessModal")
+const Business = require("../Models/businessModal");
+const User = require("../Models/userModel");
 const cloudinary = require("cloudinary").v2
 
 // Create
@@ -16,7 +17,20 @@ exports.createBusiness = async (req, res) => {
     // console.log("photo",photo)   
     const business = new Business({ ...req.body, businessPhoto: photo });
     await business.save();
-    res.status(201).json(business);
+
+    const userId = req.user.id;
+    console.log(userId)
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { businessDetails: business._id },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ error: "User not found to associate business." });
+    }
+    res.status(201).json({
+      success:true,
+      business});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

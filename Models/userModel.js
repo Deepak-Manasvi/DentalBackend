@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema({
   isVerified: {
     type: Boolean,
   },
+  businessDetails: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Business"
+  }
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
