@@ -1,5 +1,6 @@
 const Prescription = require("../Models/prescriptionModel");
 const mongoose = require("mongoose");
+const Appointment = require("../Models/appointmentModels")
 
 exports.createPrescription = async (req, res) => {
   try {
@@ -17,7 +18,7 @@ exports.createPrescription = async (req, res) => {
 
 exports.getPrescriptionByExamination = async (req, res) => {
   try {
-    const data = await Prescription.findOne({ examinationId: req.params.examId });
+    const data = await Appointment.findOne({ examinationId: req.params.examId });
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ message: "Error", error });
