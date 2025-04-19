@@ -45,7 +45,10 @@ const userSchema = new mongoose.Schema({
   businessDetails: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Business"
-  }
+  },
+  address: {
+    type: String,
+  },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

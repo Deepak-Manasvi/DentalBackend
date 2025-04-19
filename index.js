@@ -72,8 +72,6 @@ app.use('/api/contacts', contactRoutes);
 app.use("/api/plan", planRouter);
 app.use("/api/business", businessRoutes);
 
-
-
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

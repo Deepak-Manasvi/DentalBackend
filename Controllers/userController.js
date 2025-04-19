@@ -6,16 +6,7 @@ const nodemailer = require('nodemailer');
 
 exports.userLogin = async (req, res) => {
   const { email, password, role } = req.body;
- console.log(req.body)
-  // Field validation
-  // if (!email || !password || !role) {
-  //   return res.status(400).json({
-  //     status: 400,
-  //     message: "Validation error: Email, password, and role are required."
-  //   });
-  // }
 
-  // Role check
   const allowedRoles = ["admin", "receptionist"];
   if (!allowedRoles.includes(role)) {
     return res.status(400).json({
@@ -76,30 +67,13 @@ exports.userLogin = async (req, res) => {
 };
 
 exports.userRegister = async (req, res) => {
-  const { email, password, role, username } = req.body;
+  const { firstName, lastName, password, address, email, role, phone } = req.body;
 
-  // Field validation
-  if (!email || !password || !role || !username) {
+  // Basic validation
+  if (!firstName || !lastName || !password || !address || !email || !role || !phone) {
     return res.status(400).json({
       status: 400,
-      message: "Validation error: Email, password, username and role are required."
-    });
-  }
-
-  // Email format validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({
-      status: 400,
-      message: "Validation error: Invalid email format."
-    });
-  }
-
-  // Password length validation
-  if (password.length < 6) {
-    return res.status(400).json({
-      status: 400,
-      message: "Validation error: Password must be at least 6 characters long."
+      message: "Validation error: All fields are required."
     });
   }
 
@@ -113,6 +87,7 @@ exports.userRegister = async (req, res) => {
   }
 
   try {
+    // Check if user already exists
     const existing = await User.findOne({ email });
     if (existing) {
       return res.status(409).json({
@@ -121,13 +96,18 @@ exports.userRegister = async (req, res) => {
       });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create new user
     const newUser = new User({
-      email,
+      firstName,
+      lastName,
       password: hashedPassword,
+      address,
+      email,
       role,
-      username
+      phone
     });
 
     await newUser.save();
