@@ -24,6 +24,7 @@ const contactRoutes = require("./routes/contactRoutes")
 const dashboardRoute = require("./routes/dashboardRoute")
 const planRouter = require("./routes/planRoute");
 const businessRoutes = require("./routes/businessRoute");
+const treatmentRoutes = require("./routes/treatmentRoutes")
 
 //cors
 app.use(cors());
@@ -71,6 +72,7 @@ app.use("/api", dashboardRoute);
 app.use('/api/contacts', contactRoutes);
 app.use("/api/plan", planRouter);
 app.use("/api/business", businessRoutes);
+app.use("/api/treatment", treatmentRoutes)
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

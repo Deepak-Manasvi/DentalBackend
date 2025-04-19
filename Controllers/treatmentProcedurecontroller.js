@@ -1,5 +1,5 @@
 // controllers/treatmentProcedure.controller.js
-const TreatmentProcedure = require('../Models/treatmentProceduremodel.js');
+const TreatmentProcedure = require('../Models/treatmentProceduremodel');
 
 exports.createTreatment = async (req, res) => {
   try {
@@ -22,6 +22,7 @@ exports.getAllTreatments = async (req, res) => {
 
 exports.getTreatmentById = async (req, res) => {
   try {
+    console.log("entered")
     const treatment = await TreatmentProcedure.findById(req.params.id).populate('patientId');
     if (!treatment) return res.status(404).json({ message: 'Treatment not found' });
     res.json(treatment);
