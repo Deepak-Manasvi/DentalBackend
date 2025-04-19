@@ -7,8 +7,9 @@ const {
   deleteBranchById,
 } = require("../Controllers/branchController");
 const router = express.Router();
+const { isAdmin, auth } = require("../middlewares/auth");
 
-router.post("/createBranch", createBranch);
+router.post("/createBranch", auth, isAdmin, createBranch);
 router.get("/getAllBranch", getAllBranch);
 router.get("/getBranchById/:id", getBranchById);
 router.patch("/updateBranchById/:id", updateBranchById);

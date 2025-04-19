@@ -2,13 +2,26 @@ const Branch = require("../Models/branchModel");
 
 exports.createBranch = async (req, res) => {
     try {
-        const { name, address, contact, pincode } = req.body;
+        const adminId = req.body.adminId;
+        const branchCount = await Branch.countDocuments({ createdBy: adminId });
+
+        if (branchCount >= 2) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only create up to 2 branches.",
+            });
+        }
+
+        const { address, contact, pincode } = req.body;
+        const branchNumber = branchCount + 1;
+        const generatedName = `branch-${branchNumber.toString().padStart(2, "0")}`;
 
         const newBranch = new Branch({
-            name,
+            name: generatedName, 
             address,
             contact,
             pincode,
+            createdBy: adminId,
         });
 
         await newBranch.save();
@@ -25,7 +38,7 @@ exports.createBranch = async (req, res) => {
             error: error.message,
         });
     }
-}
+};
 
 exports.getAllBranch = async (req, res) => {
     try {

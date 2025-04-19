@@ -13,7 +13,12 @@ const branchSchema = new mongoose.Schema({
     pincode: {
         type: String,
     },
-});
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    }
+}, { timestamps: true });
 
 module.exports = mongoose.model('Branch', branchSchema);
 
