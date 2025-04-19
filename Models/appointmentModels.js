@@ -38,7 +38,6 @@ const appointmentSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-
     medicalHistory: [
       {
         type: String,
@@ -65,7 +64,7 @@ const appointmentSchema = new mongoose.Schema(
     appointmentTime: [{
       type: String,
     }],
-    doctorName:[ {
+    doctorName: [{
       type: String,
       required: true,
     }],
@@ -89,16 +88,17 @@ const appointmentSchema = new mongoose.Schema(
     isPatient: {
       type: Boolean,
       default: false,
-      //appointment
-      //patient
     },
     receiptGenerate: {
       type: Boolean,
-      default: false, // Default to false unless explicitly updated
+      default: false,
     },
     InvoiceGenerate: {
       type: Boolean,
-      default: false, // Default to false unless explicitly updated
+      default: false, 
+    },
+    branchId: {
+      type: String
     },
   },
   { timestamps: true }

@@ -12,15 +12,16 @@ exports.createBranch = async (req, res) => {
             });
         }
 
-        const { address, contact, pincode } = req.body;
+        const { name, address, contact, pincode } = req.body;
         const branchNumber = branchCount + 1;
-        const generatedName = `branch-${branchNumber.toString().padStart(2, "0")}`;
+        const generatedId = `${branchNumber.toString().padStart(2, "0")}`;
 
         const newBranch = new Branch({
-            name: generatedName, 
+            name,
             address,
             contact,
             pincode,
+            branchId: generatedId,
             createdBy: adminId,
         });
 
@@ -80,6 +81,7 @@ exports.getBranchById = async (req, res) => {
         });
     }
 }
+
 exports.updateBranchById = async (req, res) => {
     try {
         const { name, address, contact, pincode } = req.body;

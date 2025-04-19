@@ -13,6 +13,9 @@ const branchSchema = new mongoose.Schema({
     pincode: {
         type: String,
     },
+    branchId:{
+        type: String,
+    },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
