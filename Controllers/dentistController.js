@@ -2,31 +2,51 @@ const Dentist = require("../Models/dentistModel");
 
 exports.createDentist = async (req, res) => {
     try {
-        const { name, address, contact, email, password } = req.body;
-
-        const newDentist = new Dentist({
-            name,
-            address,
-            contact,
-            email,
-            password,
+      const { name, address, contact, email, password, opdAmount, timeSlots, branch } = req.body;
+  
+      console.log( name, address, contact, email, password, opdAmount, timeSlots, branch )
+      if (!name || !email || !password || !branch) {
+        return res.status(400).json({
+          success: false,
+          message: "Name, Email, Password, and Branch are required",
         });
-
-        await newDentist.save();
-
-        res.status(201).json({
-            success: true,
-            message: "Dentist created successfully",
-            dentist: newDentist,
+      }
+  
+      const existing = await Dentist.findOne({ email });
+      if (existing) {
+        return res.status(409).json({
+          success: false,
+          message: "Dentist already exists with this email",
         });
+      }
+  
+      const newDentist = new Dentist({
+        name,
+        address,
+        contact,
+        email,
+        password,
+        opdAmount,
+        timeSlots,
+        branch,
+      });
+  
+      await newDentist.save();
+  
+      res.status(201).json({
+        success: true,
+        message: "Dentist created successfully",
+        dentist: newDentist,
+      });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error creating dentist",
-            error: error.message,
-        });
+      res.status(500).json({
+        success: false,
+        message: "Error creating dentist",
+        error: error.message,
+      });
     }
-}
+  };
+  
 
 exports.getAllDentist = async (req, res) => {
     try {
@@ -44,6 +64,28 @@ exports.getAllDentist = async (req, res) => {
         });
     }
 }
+
+
+
+exports.getDentistsByBranch = async (req, res) => {
+  try {
+    const { branchId } = req.params;
+
+    const dentists = await Dentist.find({ branch: branchId });
+
+    res.status(200).json({
+      success: true,
+      dentists,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch dentists by branch",
+      error: error.message,
+    });
+  }
+};
+
 
 exports.getDentistById = async (req, res) => {
     try {
