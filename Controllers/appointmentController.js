@@ -66,6 +66,7 @@ exports.createAppointment = async (req, res) => {
       "doctorName",
       "paymentMode",
       "status",
+      "bp"
     ];
 
     for (const field of requiredFields) {
