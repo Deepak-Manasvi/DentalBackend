@@ -100,6 +100,10 @@ const appointmentSchema = new mongoose.Schema(
     branchId: {
       type: String
     },
+    receipts: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Receipt",
+    }],
   },
   { timestamps: true }
 );

@@ -12,7 +12,6 @@ const {
 router.post('/createDentist', createDentist);
 router.get('/getAllDentist', getAllDentist);
 
-
 router.get("/branch/:branchId", getDentistsByBranch);
 router.get('/getDentistById/:id', getDentistById);
 router.patch('/updateDentistById/:id', updateDentistById);

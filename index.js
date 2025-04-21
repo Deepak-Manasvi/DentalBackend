@@ -15,7 +15,6 @@ const appointmentRoute = require('./routes/appointmentsRoute');
 const examinationRoute = require('./routes/examinationRoute');
 const procedureRoute = require('./routes/procedureRoute');
 const prescriptionRoute = require('./routes/prescriptionRoute');
-const billingRoute = require("./routes/billingRoute");
 const staffRoute = require("./routes/staffRoute");
 const branchRoute = require("./routes/branchRoute");
 const dentistRoute = require("./routes/dentistRoute");
@@ -25,6 +24,7 @@ const dashboardRoute = require("./routes/dashboardRoute")
 const planRouter = require("./routes/planRoute");
 const businessRoutes = require("./routes/businessRoute");
 const treatmentRoutes = require("./routes/treatmentRoutes")
+const receiptRoutes =require("./routes/receiptRoutes")
 
 //cors
 app.use(cors());
@@ -58,12 +58,12 @@ app.use(
 cloudinaryConnect();
 // Routes
 app.use("/api/user", userRoutes);
+app.use('/api/receipts', receiptRoutes);
 app.use("/api/receptionist", receptionistRoutes);
 app.use("/api/appointments", appointmentRoute);
 app.use("/api/examinations", examinationRoute);
 app.use("/api/procedures", procedureRoute);
 app.use("/api/prescriptions", prescriptionRoute);
-app.use("/api/billing", billingRoute);
 app.use("/api/staff", staffRoute);
 app.use("/api/branch", branchRoute);
 app.use("/api/dentist", dentistRoute);
