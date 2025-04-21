@@ -17,7 +17,7 @@ const treatmentProcedureSchema = new mongoose.Schema({
   patientId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Appointment',
-    required: true,
+    required: false,
   },
   procedures: [procedureSchema],
   todayTreatment: String,
