@@ -350,7 +350,7 @@ exports.verifyOtp = async (req, res) => {
     return res.status(400).json({ message: "Email and OTP are required." });
   }
   try {
-    const user = await Admin.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
@@ -533,3 +533,61 @@ exports.getAdminById = async (req, res) => {
   }
 };
 
+exports.forgetPassword = async (req, res) => {
+  const { email} = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found with this email." });
+    }
+
+    const otp = generateOTP();
+    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); 
+
+    user.otp = otp;
+    user.otpExpiresAt = otpExpiresAt;
+    await user.save();
+
+    await sendOtpEmail(email, otp);
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent to email. Please verify to reset your password.",
+    });
+
+  } catch (error) {
+    console.error("Forget Password Error:", error);
+    return res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  const { email, newPassword, confirmPassword } = req.body;
+
+  if (!email || !newPassword || !confirmPassword) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ message: "Passwords do not match." });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.isVerifiedForReset = false;
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Password reset successful." });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
