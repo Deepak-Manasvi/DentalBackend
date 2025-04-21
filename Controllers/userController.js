@@ -67,15 +67,7 @@ exports.userLogin = async (req, res) => {
 };
 
 exports.userRegister = async (req, res) => {
-  const { firstName, lastName, password, address, email, role, phone } = req.body;
-
-  // Basic validation
-  if (!firstName || !lastName || !password || !address || !email || !role || !phone) {
-    return res.status(400).json({
-      status: 400,
-      message: "Validation error: All fields are required."
-    });
-  }
+  const { firstName, lastName, password, address, email, role, phone, opdAmount, timeSlots, branchId } = req.body;
 
   // Role validation
   const allowedRoles = ["admin", "receptionist"];
@@ -107,7 +99,10 @@ exports.userRegister = async (req, res) => {
       address,
       email,
       role,
-      phone
+      phone,
+      opdAmount, 
+      timeSlots, 
+      branchId
     });
 
     await newUser.save();

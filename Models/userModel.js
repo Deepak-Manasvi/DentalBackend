@@ -49,6 +49,13 @@ const userSchema = new mongoose.Schema({
   address: {
     type: String,
   },
+  opdAmount: {
+    type: String,
+  }, 
+  timeSlots: [{ type: String }], 
+  branchId: {
+    type: String,
+  },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
