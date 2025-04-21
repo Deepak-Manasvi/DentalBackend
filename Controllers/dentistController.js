@@ -2,7 +2,7 @@ const Dentist = require("../Models/dentistModel");
 
 exports.createDentist = async (req, res) => {
   try {
-    const { name, address, contact, email, password, opdAmount, timeSlots, branch } = req.body;
+    const { name, address, contact, email, password, opdAmount, timeSlots, branch, branchId } = req.body;
     if (!name || !email || !password || !branch) {
       return res.status(400).json({
         success: false,
@@ -27,6 +27,7 @@ exports.createDentist = async (req, res) => {
       opdAmount,
       timeSlots,
       branch,
+      branchId
     });
 
     await newDentist.save();

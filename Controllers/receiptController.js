@@ -1,48 +1,44 @@
-const Appointment = require('../Models/appointmentModels');
-const Receipt = require('../Models/receiptModel');
-
+const Appointment = require("../Models/appointmentModels");
+const Receipt = require("../Models/receiptModel");
 
 // Create a receipt
 exports.createReceipt = async (req, res) => {
   try {
-    const { appId,
-        uhid,
-        patientName,
-        mobileNumber,
-        address,
-        doctorName,
-        opdAmount,
-        paymentMode,
-        transactionId,
-        receptionist, } = req.body;
+    const {
+      appId,
+      uhid,
+      patientName,
+      mobileNumber,
+      address,
+      doctorName,
+      opdAmount,
+      paymentMode,
+      transactionId,
+      branchId,
+      receptionist,
+    } = req.body;
 
     const appointment = await Appointment.findOne({ uuid: uhid });
     if (!appointment) {
-      return res.status(404).json({ message: 'Appointment not found' });
+      return res.status(404).json({ message: "Appointment not found" });
     }
 
     // Create the receipt
-    const receipt = new Receipt({
-        uhid,
-      totalAmount,
-      paidAmount,
-      paymentStatus,
-      paymentMode,
-      transactionId,
-    });
+    const receipt = new Receipt(req.body);
 
     // Save the receipt
     await receipt.save();
 
-
     await Appointment.findByIdAndUpdate(appointmentId, {
       $push: { receipts: receipt._id },
-      receiptGenerate: true, 
+      receiptGenerate: true,
     });
 
-    return res.status(201).json({ message: 'Receipt generated successfully', receipt });
+    return res
+      .status(201)
+      .json({ message: "Receipt generated successfully", receipt });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: "Server error" });
   }
 };
