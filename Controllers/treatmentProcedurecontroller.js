@@ -54,3 +54,38 @@ exports.deleteTreatment = async (req, res) => {
     res.status(500).json({ message: 'Error deleting treatment', error });
   }
 };
+
+
+exports.saveAdultTreatmentProcedure = async (req, res) => {
+  try {
+    const {
+      patientId,
+      date,
+      toothName,
+      procedureDone,
+      materialsUsed,
+      notes,
+      nextDate,
+      procedures,
+      medicines,
+    } = req.body;
+
+    const newRecord = new TreatmentProcedure({
+      patientId,
+      date,
+      toothName,
+      procedureDone,
+      materialsUsed,
+      notes,
+      nextDate,
+      procedures,
+      medicines,
+    });
+
+    await newRecord.save();
+    res.status(201).json({ success: true, message: "Treatment saved", data: newRecord });
+  } catch (error) {
+    console.error("Error saving treatment procedure:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
