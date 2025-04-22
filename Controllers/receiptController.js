@@ -107,7 +107,9 @@ exports.updateReceiptById = async (req, res) => {
       transactionId,
       branchId,
       receptionist,
-      treatmentType
+      treatmentType,
+      generateInvoice,
+      printInovice,
     } = req.body;
 
     const receipt = await Receipt.findByIdAndUpdate(
@@ -126,6 +128,8 @@ exports.updateReceiptById = async (req, res) => {
         branchId,
         receptionist,
         treatmentType,
+        generateInvoice,
+        printInovice,
       },
       { new: true }
     );
