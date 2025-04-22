@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const uploadFiles = require("../middlewares/uploadFiles");
+const multer = require("multer");
 const {
   getConfigurations,
   createConfiguration,
@@ -15,7 +15,7 @@ router.get("/getUpload", getConfigurations);
 router.get("/getUpload/:id", getConfigurationById);
 
 // Update configuration
-router.put("/updateUpload/:id", uploadFiles, updateConfiguration);
+router.put("/updateUpload/:id", updateConfiguration);
 
 // Delete configuration
 router.delete("/deleteUpload/:id", deleteConfiguration);

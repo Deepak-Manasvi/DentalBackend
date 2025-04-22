@@ -35,4 +35,5 @@ const ClinicConfigSchema = new mongoose.Schema({
   },
 });
 
+
 module.exports = mongoose.model("ClinicConfig", ClinicConfigSchema);

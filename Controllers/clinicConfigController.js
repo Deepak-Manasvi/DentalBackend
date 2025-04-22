@@ -1,5 +1,5 @@
 const ClinicConfig = require("../Models/clinicConficModel");
-const { cloudinary } = require("../Config/cloudinary");
+const cloudinary = require("cloudinary").v2;
 
 // Get all clinic configurations
 exports.getConfigurations = async (req, res) => {
@@ -24,26 +24,33 @@ exports.createConfiguration = async (req, res) => {
   try {
     const { termsAndCondition, shareOnMail } = req.body;
 
-    // Get file upload results from multer middleware
-    const files = req.files || {};
+    // Initialize header and footer as null
+    let header = null;
+    let footer = null;
+
+    // Handle header image upload
+    if (req.files && req.files.header) {
+      const file = req.files.header;
+      const result = await cloudinary.uploader.upload(file.tempFilePath);
+      header = { url: result.secure_url, public_id: result.headerPublic_id };
+    }
+
+    // Handle footer image upload
+    if (req.files && req.files.footer) {
+      const file = req.files.footer;
+      const result = await cloudinary.uploader.upload(file.tempFilePath);
+      footer = { url: result.secure_url, public_id: result.footerPublic_id };
+    }
 
     // Create new configuration instance
     const newConfig = new ClinicConfig({
       termsAndCondition: termsAndCondition || "",
       shareOnMail: shareOnMail === "true",
+      headerUrl: header?.url || "",
+      headerPublicId: header?.public_id || "",
+      footerUrl: footer?.url || "",
+      footerPublicId: footer?.public_id || "",
     });
-
-    // Add header details if uploaded
-    if (files.header && files.header.length > 0) {
-      newConfig.headerUrl = files.header[0].path;
-      newConfig.headerPublicId = files.header[0].filename;
-    }
-
-    // Add footer details if uploaded
-    if (files.footer && files.footer.length > 0) {
-      newConfig.footerUrl = files.footer[0].path;
-      newConfig.footerPublicId = files.footer[0].filename;
-    }
 
     // Save to database
     await newConfig.save();
@@ -66,7 +73,6 @@ exports.updateConfiguration = async (req, res) => {
   try {
     const configId = req.params.id;
     const { termsAndCondition, shareOnMail } = req.body;
-    const files = req.files || {};
 
     // Find existing configuration
     const config = await ClinicConfig.findById(configId);
@@ -77,52 +83,47 @@ exports.updateConfiguration = async (req, res) => {
       });
     }
 
-    // Track if we need to delete old images
-    let deleteHeaderImage = false;
-    let deleteFooterImage = false;
-
-    // Update configuration fields
-    config.termsAndCondition = termsAndCondition || config.termsAndCondition;
-    config.shareOnMail = shareOnMail === "true";
-    config.updatedAt = Date.now();
-
-    // Update header if new one uploaded
-    if (files.header && files.header.length > 0) {
-      if (config.headerPublicId) {
-        deleteHeaderImage = true;
-      }
-      config.headerUrl = files.header[0].path;
-      config.headerPublicId = files.header[0].filename;
+    // Update basic fields
+    if (termsAndCondition !== undefined) {
+      config.termsAndCondition = termsAndCondition;
     }
 
-    // Update footer if new one uploaded
-    if (files.footer && files.footer.length > 0) {
-      if (config.footerPublicId) {
-        deleteFooterImage = true;
+    if (shareOnMail !== undefined) {
+      config.shareOnMail = shareOnMail === "true";
+    }
+
+    config.updatedAt = Date.now();
+
+    // Handle header image update
+    if (req.files && req.files.header) {
+      // Delete old header image if exists
+      if (config.headerPublicId) {
+        await cloudinary.uploader.destroy(config.headerPublicId);
       }
-      config.footerUrl = files.footer[0].path;
-      config.footerPublicId = files.footer[0].filename;
+
+      const file = req.files.header;
+      const result = await cloudinary.uploader.upload(file.tempFilePath);
+
+      config.headerUrl = result.secure_url;
+      config.headerPublicId = result.public_id;
+    }
+
+    // Handle footer image update
+    if (req.files && req.files.footer) {
+      // Delete old footer image if exists
+      if (config.footerPublicId) {
+        await cloudinary.uploader.destroy(config.footerPublicId);
+      }
+
+      const file = req.files.footer;
+      const result = await cloudinary.uploader.upload(file.tempFilePath);
+
+      config.footerUrl = result.secure_url;
+      config.footerPublicId = result.public_id;
     }
 
     // Save updated configuration
     await config.save();
-
-    // Delete old images from Cloudinary if needed
-    if (deleteHeaderImage && config.headerPublicId) {
-      try {
-        await cloudinary.uploader.destroy(config.headerPublicId);
-      } catch (error) {
-        console.error("Error deleting old header image:", error);
-      }
-    }
-
-    if (deleteFooterImage && config.footerPublicId) {
-      try {
-        await cloudinary.uploader.destroy(config.footerPublicId);
-      } catch (error) {
-        console.error("Error deleting old footer image:", error);
-      }
-    }
 
     res.status(200).json({
       success: true,
@@ -153,19 +154,11 @@ exports.deleteConfiguration = async (req, res) => {
 
     // Delete images from Cloudinary
     if (config.headerPublicId) {
-      try {
-        await cloudinary.uploader.destroy(config.headerPublicId);
-      } catch (error) {
-        console.error("Error deleting header image:", error);
-      }
+      await cloudinary.uploader.destroy(config.headerPublicId);
     }
 
     if (config.footerPublicId) {
-      try {
-        await cloudinary.uploader.destroy(config.footerPublicId);
-      } catch (error) {
-        console.error("Error deleting footer image:", error);
-      }
+      await cloudinary.uploader.destroy(config.footerPublicId);
     }
 
     // Remove from database
