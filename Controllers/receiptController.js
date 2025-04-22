@@ -157,3 +157,13 @@ exports.deleteReceiptById = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.getReceiptsWithInvoice = async (req, res) => {
+  try {
+    const receipts = await Receipt.find({ generateInvoice: true }).populate("appointmentId");
+    res.status(200).json({ receipts });
+  } catch (error) {
+    console.error("Error fetching receipts with invoice:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
