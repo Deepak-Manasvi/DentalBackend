@@ -9,19 +9,15 @@ const {
   getConfigurationById,
 } = require("../Controllers/clinicConfigController");
 
-// Get all configurations
+router.post("/createUpload", createConfiguration);
 router.get("/getUpload", getConfigurations);
-
 // Get single configuration
-router.get("/getUpload:id", getConfigurationById);
-
-// Create new configuration
-router.post("/createUpload", uploadFiles, createConfiguration);
+router.get("/getUpload/:id", getConfigurationById);
 
 // Update configuration
-router.put("/updateUpload:id", uploadFiles, updateConfiguration);
+router.put("/updateUpload/:id", uploadFiles, updateConfiguration);
 
 // Delete configuration
-router.delete("/deleteUpload:id", deleteConfiguration);
+router.delete("/deleteUpload/:id", deleteConfiguration);
 
 module.exports = router;
