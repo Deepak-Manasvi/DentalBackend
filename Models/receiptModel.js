@@ -25,18 +25,23 @@ const receiptSchema = new mongoose.Schema(
       enum: ["Paid", "Pending", "Partially Paid"],
       required: true,
     },
-    receiptDate: {
-      type: Date,
-      default: Date.now,
-    },
-    transactionId: {
-      type: String,
-      required: false,
-    },
+    transactionId: String,
     paymentMode: {
       type: String,
       enum: ["Cash", "Card", "UPI"],
       required: true,
+    },
+    patientName: String,
+    mobileNumber: String,
+    address: String,
+    doctorName: String,
+    opdAmount: Number,
+    treatmentType: String,
+    branchId: String,
+    receptionist: String,
+    receiptDate: {
+      type: Date,
+      default: Date.now,
     },
   },
   { timestamps: true }
