@@ -43,6 +43,14 @@ const receiptSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    generateInvoice: {
+      type: Boolean,
+      default: false, 
+    },
+    printInovice: {
+      type: Boolean,
+      default: false, 
+    },
   },
   { timestamps: true }
 );
