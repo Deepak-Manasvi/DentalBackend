@@ -1,39 +1,81 @@
 const mongoose = require("mongoose");
 
-const medicineSchema = new mongoose.Schema(
-  {
-    name: String,
-    dosage: String,
-    timing: String,
+// Teeth details schema
+const teethDetailsSchema = new mongoose.Schema({
+  toothNumber: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 32,
+    validate: {
+      validator: Number.isInteger,
+      message: "Tooth number must be an integer"
+    }
   },
-  { _id: false }
-);
+  dentalCondition: {
+    type: String,
+    required: true,
+    trim: true
+  }
+}, { _id: false });
 
-const procedureSchema = new mongoose.Schema(
-  {
-    procedure: String,
-    cost: Number,
-    remarks: String,
-    uhid:String,
-  },
-  { _id: true }
-);
-
+// Main Examination schema
 const treatmentProcedureSchema = new mongoose.Schema({
-  patientId: {
+  uhid: {
+    type: String,
+    required: [true, "UHID is required"],
+    trim: true
+  },
+  appointmentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Appointment",
-    required: false,
+    required: [true, "Appointment ID is required"]
   },
-  procedures: [procedureSchema],
-  todayTreatment: String,
-  prescribedMedicines: [medicineSchema],
-  createdAt: {
-    type: Date,
-    default: Date.now,
+  type: {
+    type: String,
+    enum: {
+      values: ["Adult", "Pediatric"],
+      message: "Type must be either 'Adult' or 'Pediatric'"
+    },
+    required: true
   },
-});
+  teethDetails: {
+    type: [teethDetailsSchema],
+    default: []
+  },
+  chiefComplaint: {
+    type: String,
+    trim: true
+  },
+  examinationNotes: {
+    type: String,
+    trim: true
+  },
+  advice: {
+    type: String,
+    trim: true
+  },
 
-treatmentProcedureSchema.index({ patientId: 1, createdAt: -1 });
+  patientId: {
+    type: String,
+  },
+  toothName: {
+    type: String,
+  },
+  procedureDone: {
+    type: String,
+  },
+  procedures: [String],
+  materialsUsed: [String],
+  medicines: [String],
+  notes: String,
+  date: {
+    type: Date,
+  },
+  nextDate: {
+    type: Date
+  }
+
+}, { timestamps: true });
 
 module.exports = mongoose.model("TreatmentProcedure", treatmentProcedureSchema);

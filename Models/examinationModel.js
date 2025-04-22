@@ -55,7 +55,7 @@ const examinationSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
- 
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Examination", examinationSchema);
