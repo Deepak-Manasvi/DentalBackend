@@ -9,6 +9,7 @@ const dentistSchema = new mongoose.Schema({
   opdAmount: { type: String }, // If you are storing this
   timeSlots: [{ type: String }], // Optional: customize slot format
   branch: { type: String, required: true }, // ✅ Add this
+  branchId: { type: String }, // ✅ Add this
 });
 
 module.exports = mongoose.model("Dentist", dentistSchema);

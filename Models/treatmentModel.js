@@ -9,7 +9,10 @@ const treatmentSchema = new mongoose.Schema({
     },
     price: {
         type: String,
-    }
+    },
+    branchId: {
+        type: String,
+      },
 });
 
 module.exports = mongoose.model('Treatment', treatmentSchema);

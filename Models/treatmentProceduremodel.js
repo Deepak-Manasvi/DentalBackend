@@ -1,22 +1,28 @@
-// models/treatmentProcedure.model.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const medicineSchema = new mongoose.Schema({
-  name: String,
-  dosage: String,
-  timing: String,
-});
+const medicineSchema = new mongoose.Schema(
+  {
+    name: String,
+    dosage: String,
+    timing: String,
+  },
+  { _id: false }
+);
 
-const procedureSchema = new mongoose.Schema({
-  procedure: String,
-  cost: Number,
-  remarks: String,
-});
+const procedureSchema = new mongoose.Schema(
+  {
+    procedure: String,
+    cost: Number,
+    remarks: String,
+    uhid:String,
+  },
+  { _id: true }
+);
 
 const treatmentProcedureSchema = new mongoose.Schema({
   patientId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Appointment',
+    ref: "Appointment",
     required: false,
   },
   procedures: [procedureSchema],
@@ -28,4 +34,6 @@ const treatmentProcedureSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('TreatmentProcedure', treatmentProcedureSchema);
+treatmentProcedureSchema.index({ patientId: 1, createdAt: -1 });
+
+module.exports = mongoose.model("TreatmentProcedure", treatmentProcedureSchema);
