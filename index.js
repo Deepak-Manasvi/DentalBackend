@@ -77,6 +77,7 @@ app.use("/api/business", businessRoutes);
 app.use("/api/treatment", treatmentRoutes)
 app.use("/api/clinic-config", ClinicConfig); 
 app.use('/api/pediatric', pediatricRoute);
+app.use('/api/saveAllData', treatmentRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

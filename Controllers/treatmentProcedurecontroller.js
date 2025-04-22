@@ -67,7 +67,6 @@ exports.deleteTreatment = async (req, res) => {
   }
 };
 
-
 exports.saveAdultTreatmentProcedure = async (req, res) => {
   try {
     const {
@@ -95,7 +94,9 @@ exports.saveAdultTreatmentProcedure = async (req, res) => {
     });
 
     await newRecord.save();
-    res.status(201).json({ success: true, message: "Treatment saved", data: newRecord });
+    res
+      .status(201)
+      .json({ success: true, message: "Treatment saved", data: newRecord });
   } catch (error) {
     console.error("Error saving treatment procedure:", error);
     res.status(500).json({ success: false, message: "Server error" });

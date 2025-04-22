@@ -1,22 +1,26 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const medicineSchema = new mongoose.Schema({
-  name: String,
-  dosage: String,
-  timing: String,
-});
+const medicineSchema = new mongoose.Schema(
+  {
+    name: String,
+    dosage: String,
+    timing: String,
+  },
+  { _id: false }
+);
 
 const procedureSchema = new mongoose.Schema({
   procedure: String,
   cost: Number,
   remarks: String,
-});
+},
+{ _id: true });
 
 const pediatricTreatmentSchema = new mongoose.Schema({
   patientId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Appointment',
-    required: true,
+    ref: "Appointment",
+    required: false,
   },
   procedures: [procedureSchema],
   todayTreatment: String,
@@ -27,4 +31,4 @@ const pediatricTreatmentSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('PediatricTreatment', pediatricTreatmentSchema);
+module.exports = mongoose.model("PediatricTreatment", pediatricTreatmentSchema);
