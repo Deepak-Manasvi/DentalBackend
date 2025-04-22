@@ -25,6 +25,7 @@ const planRouter = require("./routes/planRoute");
 const businessRoutes = require("./routes/businessRoute");
 const treatmentRoutes = require("./routes/treatmentRoutes");
 const receiptRoutes = require("./routes/receiptRoutes");
+const invoiceRoutes = require("./routes/invoiceRoutes");
 const ClinicConfig = require("./routes/clinicConfigRoutes");
 const pediatricRoute = require("./routes/pediatricRoute");
 
@@ -61,6 +62,7 @@ cloudinaryConnect();
 // Routes
 app.use("/api/user", userRoutes);
 app.use('/api/receipts', receiptRoutes);
+app.use('/api/invoices',invoiceRoutes);
 app.use("/api/receptionist", receptionistRoutes);
 app.use("/api/appointments", appointmentRoute);
 app.use("/api/examinations", examinationRoute);
