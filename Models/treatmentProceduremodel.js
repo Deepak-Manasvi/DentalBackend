@@ -19,6 +19,82 @@ const teethDetailsSchema = new mongoose.Schema({
   }
 }, { _id: false });
 
+// Procedure schema for procedureList
+const procedureSchema = new mongoose.Schema({
+  procedure: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  treatment: {
+    type: String,
+    trim: true
+  },
+  sitting: {
+    type: String,
+    trim: true
+  },
+  cost: {
+    type: String,
+    trim: true
+  }
+}, { _id: false });
+
+// Medicine schema
+const medicineSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  frequency: {
+    type: String,
+    trim: true
+  },
+  beforeFood: {
+    type: String,
+    trim: true
+  },
+  afterFood: {
+    type: String,
+    trim: true
+  },
+  duration: {
+    type: String,
+    trim: true
+  },
+  instructions: {
+    type: String,
+    trim: true
+  }
+}, { _id: false });
+
+// Materials Used schema
+const materialsSchema = new mongoose.Schema({
+  date: {
+    type: Date
+  },
+  toothName: {
+    type: String,
+    trim: true
+  },
+  procedureDone: {
+    type: String,
+    trim: true
+  },
+  materialsUsed: {
+    type: String,
+    trim: true
+  },
+  notes: {
+    type: String,
+    trim: true
+  },
+  nextDate: {
+    type: Date
+  }
+}, { _id: false });
+
 // Main Examination schema
 const treatmentProcedureSchema = new mongoose.Schema({
   uhid: {
@@ -55,7 +131,6 @@ const treatmentProcedureSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-
   patientId: {
     type: String,
   },
@@ -65,9 +140,23 @@ const treatmentProcedureSchema = new mongoose.Schema({
   procedureDone: {
     type: String,
   },
+  
+  // Updated fields to store complex data
+  procedureList: {
+    type: [procedureSchema],
+    default: []
+  },
+  medicines: {
+    type: [medicineSchema],
+    default: []
+  },
+  materialsUsed: {
+    type: materialsSchema,
+    default: {}
+  },
+  
+  // Keep the original fields for backward compatibility
   procedures: [String],
-  materialsUsed: [String],
-  medicines: [String],
   notes: String,
   date: {
     type: Date,

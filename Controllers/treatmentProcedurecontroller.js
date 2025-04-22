@@ -125,6 +125,75 @@ exports.updateTreatmentProcedureById = async (req, res) => {
     });
   }
 };
+exports.updateTreatmentById = async (req, res) => {
+  try {
+    const treatmentId = req.params.id;
+    const { procedureList, medicines, materialsUsed } = req.body;
+
+    if (!treatmentId) {
+      return res.status(400).json({
+        success: false,
+        message: "Treatment ID is required",
+      });
+    }
+
+    // For backward compatibility, extract procedure names
+    const procedureNames = procedureList ? procedureList.map(item => item.procedure) : [];
+    
+    // For backward compatibility, extract medicine names
+    const medicineNames = medicines ? medicines.map(item => item.name) : [];
+    
+    // Build update object
+    const updateData = {
+      // Store the complex objects directly
+      procedureList: procedureList || [],
+      medicines: medicines || [],
+      materialsUsed: materialsUsed || {},
+      
+      // Also update the simple fields for backward compatibility
+      procedures: procedureNames,
+      toothName: materialsUsed?.toothName || "",
+      procedureDone: materialsUsed?.procedureDone || "",
+      notes: materialsUsed?.notes || "",
+    };
+    
+    // Handle date fields
+    if (materialsUsed?.date) {
+      updateData.date = new Date(materialsUsed.date);
+    }
+    
+    if (materialsUsed?.nextDate && materialsUsed.nextDate !== "") {
+      updateData.nextDate = new Date(materialsUsed.nextDate);
+    }
+
+    // Find and update the treatment procedure
+    const updatedTreatment = await TreatmentProcedure.findByIdAndUpdate(
+      treatmentId,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedTreatment) {
+      return res.status(404).json({
+        success: false,
+        message: "Treatment procedure not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Treatment procedure updated successfully",
+      data: updatedTreatment,
+    });
+  } catch (error) {
+    console.error("Error updating treatment procedure:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error updating treatment procedure",
+      error: error.message,
+    });
+  }
+};
 
 function mapToothNameToNumber(toothName) {
   const toothMap = [
