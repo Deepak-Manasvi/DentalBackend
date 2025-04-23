@@ -6,20 +6,15 @@ const cloudinary = require("cloudinary").v2
 exports.createBusiness = async (req, res) => {
   try {
     let photo = null;
-    // console.log("entered")
-    console.log(req.files.businessPhoto)
     if (req.files && req.files.businessPhoto) {
       const file = req.files.businessPhoto
       const result = await cloudinary.uploader.upload(file.tempFilePath);
-      // console.log("result",result)
       photo = { url: result.secure_url, public_id: result.public_id };
     }
-    // console.log("photo",photo)   
     const business = new Business({ ...req.body, businessPhoto: photo });
     await business.save();
 
     const userId = req.user.id;
-    console.log(userId)
     const user = await User.findByIdAndUpdate(
       userId,
       { businessDetails: business._id },

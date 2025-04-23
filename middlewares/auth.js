@@ -8,7 +8,6 @@ exports.auth = async (req, res, next) => {
     //extract token
     const token = req.body.token
       || req.header("Authorization").replace("Bearer ", "");
-     console.log("token", token)
     //if token missing, then return response
     if (!token) {
       return res.status(401).json({
@@ -20,9 +19,7 @@ exports.auth = async (req, res, next) => {
     //verify the token
     try {
       const decode = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Token contains(after decoding) :", decode);
       req.user = decode;
-      // console.log("id is",req.user.id)
     } catch (error) {
       //verification issue
       return res.status(401).json({

@@ -26,8 +26,6 @@ exports.createContact = async (req, res) => {
       "Your Data sent successfully",
       contactUsEmail(email,name,message,phoneNumber)
     )
-    // console.log("Email Res ", emailRes)
-    // Send email with login credentials
    
     return res.status(201).json({
       message: 'Contact created successfully.',
