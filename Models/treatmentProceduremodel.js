@@ -140,7 +140,7 @@ const treatmentProcedureSchema = new mongoose.Schema({
   procedureDone: {
     type: String,
   },
-  
+
   // Updated fields to store complex data
   procedureList: {
     type: [procedureSchema],
@@ -154,7 +154,7 @@ const treatmentProcedureSchema = new mongoose.Schema({
     type: materialsSchema,
     default: {}
   },
-  
+
   // Keep the original fields for backward compatibility
   procedures: [String],
   notes: String,
