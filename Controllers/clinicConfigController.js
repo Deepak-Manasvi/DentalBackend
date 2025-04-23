@@ -22,7 +22,7 @@ exports.getConfigurations = async (req, res) => {
 // Create new clinic configuration
 exports.createConfiguration = async (req, res) => {
   try {
-    const { termsAndCondition, shareOnMail } = req.body;
+    const { termsAndCondition, shareOnMail,adminId } = req.body;
 
     // Initialize header and footer as null
     let header = null;
@@ -50,6 +50,7 @@ exports.createConfiguration = async (req, res) => {
       headerPublicId: header?.public_id || "",
       footerUrl: footer?.url || "",
       footerPublicId: footer?.public_id || "",
+      adminId
     });
 
     // Save to database
@@ -202,3 +203,29 @@ exports.getConfigurationById = async (req, res) => {
     });
   }
 };
+
+exports.getHeaderByAdminId = async (req, res) => {
+  try {
+    const { adminId } = req.params;
+    if (!adminId) {
+      return res.status(400).json({ message: "Admin ID is required" });
+    }
+    
+    const config = await ClinicConfig.findOne({ adminId });
+    console.log(config)
+
+    if (!config) {
+      return res.status(404).json({ message: "Clinic config not found" });
+    }
+
+    return res.status(200).json({
+      headerUrl: config.headerUrl,
+      footerUrl: config.footerUrl,
+      headerPublicId: config.headerPublicId,
+    });
+  } catch (error) {
+    console.error("Error fetching header config:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+

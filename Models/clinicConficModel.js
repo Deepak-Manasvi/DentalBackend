@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const ClinicConfigSchema = new mongoose.Schema({
+  adminId:{
+    type: String,
+    default: null,
+  },
   headerUrl: {
     type: String,
     default: null,

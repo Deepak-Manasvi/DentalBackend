@@ -7,6 +7,7 @@ const {
   updateConfiguration,
   deleteConfiguration,
   getConfigurationById,
+  getHeaderByAdminId
 } = require("../Controllers/clinicConfigController");
 
 router.post("/createUpload", createConfiguration);
@@ -19,5 +20,7 @@ router.put("/updateUpload/:id", updateConfiguration);
 
 // Delete configuration
 router.delete("/deleteUpload/:id", deleteConfiguration);
+
+router.get("/header/:adminId", getHeaderByAdminId);
 
 module.exports = router;
