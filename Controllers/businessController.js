@@ -5,6 +5,7 @@ const cloudinary = require("cloudinary").v2
 // Create
 exports.createBusiness = async (req, res) => {
   try {
+    console.log("entered")
     let photo = null;
     if (req.files && req.files.businessPhoto) {
       const file = req.files.businessPhoto
@@ -13,16 +14,16 @@ exports.createBusiness = async (req, res) => {
     }
     const business = new Business({ ...req.body, businessPhoto: photo });
     await business.save();
-
+    
     const userId = req.user.id;
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { businessDetails: business._id },
-      { new: true }
-    );
+    const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ error: "User not found to associate business." });
-    }
+      return res.status(404).json({ error: "User not found" });
+    } 
+
+    user.businessDetails = business._id;
+    await user.save();
+ 
     res.status(201).json({
       success:true,
       business});
@@ -68,7 +69,6 @@ exports.updateBusiness = async (req, res) => {
         public_id: result.public_id,
       };
     }
-
     const updated = await Business.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });

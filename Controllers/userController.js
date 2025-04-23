@@ -16,7 +16,7 @@ exports.userLogin = async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate("businessDetails").exec();
 
     if (!user) {
       return res.status(404).json({
@@ -51,10 +51,8 @@ exports.userLogin = async (req, res) => {
     return res.status(200).json({
       status: 200,
       message: "Login successful.",
+      user,
       token,
-      role: user.role,
-      userId: user._id,
-      email: user.email
     });
 
   } catch (error) {
@@ -371,7 +369,8 @@ exports.verifyOtp = async (req, res) => {
 
 exports.getAllUser = async (req, res) => {
   try {
-    const user = await User.find({});
+    console.log("entered2")
+    const user = await User.find({}).populate("businessDetails").exec();
     if (!user) {
       return res.status(404).json({
         success: false,
