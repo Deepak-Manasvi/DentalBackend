@@ -175,16 +175,16 @@ function mapToothNameToNumber(toothName) {
 // Get All Treatment
 exports.getTreatmentById = async (req, res) => {
   try {
-    const appointmentId = req.params.id;
+    const uhid = req.params.id;
 
-    if (!appointmentId) {
+    if (!uhid) {
       return res.status(400).json({
         success: false,
-        message: "Appointment ID is required",
+        message: "Uhid ID is required",
       });
     }
 
-    const treatments = await TreatmentProcedure.find({ appointmentId });
+    const treatments = await TreatmentProcedure.find({ uhid });
 
     if (!treatments || treatments.length === 0) {
       return res.status(404).json({
