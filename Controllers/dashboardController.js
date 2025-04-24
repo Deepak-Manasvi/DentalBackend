@@ -70,7 +70,7 @@ exports.dashboardDetails = async(req,res) => {
               $project: {
                 day: {
                   $arrayElemAt: [
-                    [ "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
+                    [ "", "Sund", "Mond", "Tues", "Wed", "Thur", "Fri", "Sat" ],
                     "$_id",
                   ],
                 },
