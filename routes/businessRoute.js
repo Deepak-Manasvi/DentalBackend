@@ -15,7 +15,7 @@ const { auth, isAdmin } = require("../middlewares/auth");
 // const upload = multer({ storage });
 
 // Routes
-router.post("/create-business", createBusiness);
+router.post("/create-business", auth, createBusiness);
 router.get("/getbusiness", getBusinesses);
 router.get("/getbusinessBy/:id", getBusinessById);
 router.put("/updatebusiness/:id", updateBusiness);

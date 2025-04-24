@@ -5,7 +5,7 @@ const cloudinary = require("cloudinary").v2
 // Create
 exports.createBusiness = async (req, res) => {
   try {
-    console.log("entered")
+    // console.log("entered")
     let photo = null;
     if (req.files && req.files.businessPhoto) {
       const file = req.files.businessPhoto
@@ -16,6 +16,8 @@ exports.createBusiness = async (req, res) => {
     await business.save();
     
     const userId = req.user.id;
+  
+    // console.log("user",userId)
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
