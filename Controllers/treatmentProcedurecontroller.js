@@ -2,7 +2,7 @@ const TreatmentProcedure = require("../Models/treatmentProceduremodel");
 const Appointment = require("../Models/appointmentModels");
 const mongoose = require("mongoose")
 
-// Create Examination
+// Create Treatment
 exports.createTreatmentProcedure = async (req, res) => {
   try {
     const {
@@ -61,6 +61,7 @@ exports.createTreatmentProcedure = async (req, res) => {
   }
 };
 
+// Update Treatment
 exports.updateTreatmentById = async (req, res) => {
   try {
     // Extract treatment ID from request parameters
@@ -169,4 +170,39 @@ function mapToothNameToNumber(toothName) {
   ];
 
   return toothMap.indexOf(toothName) + 1;
+}
+
+// Get All Treatment
+exports.getTreatmentById = async (req, res) => {
+  try {
+    const appointmentId = req.params.id;
+
+    if (!appointmentId) {
+      return res.status(400).json({
+        success: false,
+        message: "Appointment ID is required",
+      });
+    }
+
+    const treatments = await TreatmentProcedure.find({ appointmentId });
+
+    if (!treatments || treatments.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No treatments found for this appointment ID",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: treatments,
+    });
+  } catch (error) {
+    console.error("Error fetching treatments:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching treatments",
+      error: error.message,
+    });
+  }
 }
