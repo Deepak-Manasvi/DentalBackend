@@ -28,6 +28,7 @@ const receiptRoutes = require("./routes/receiptRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const ClinicConfig = require("./routes/clinicConfigRoutes");
 const pediatricRoute = require("./routes/pediatricRoute");
+const fileRoutes = require("./routes/fileRoute");
 
 //cors
 app.use(cors());
@@ -80,6 +81,7 @@ app.use("/api/treatment", treatmentRoutes)
 app.use("/api/clinic-config", ClinicConfig); 
 app.use('/api/pediatric', pediatricRoute);
 app.use('/api/saveAllData', treatmentRoutes);
+app.use("/api/files", fileRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

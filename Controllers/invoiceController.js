@@ -88,6 +88,52 @@ exports.getInvoiceById = async (req, res) => {
   }
 };
 
+// Add this new function to your invoiceController.js
+
+exports.getInvoicesByPatientId = async (req, res) => {
+  try {
+    const { patientId } = req.params;
+    
+    // Find the appointment(s) for this patient
+    const appointments = await Appointment.find({ patientId });
+    
+    if (!appointments || appointments.length === 0) {
+      return res.json([]);  // Return empty array if no appointments found
+    }
+    
+    // Get all appointment IDs
+    const appointmentIds = appointments.map(app => app._id);
+    
+    // Find invoices related to these appointments
+    const invoices = await Invoice.find({ 
+      appointmentId: { $in: appointmentIds } 
+    }).populate('appointmentId');
+    
+    return res.status(200).json(invoices);
+  } catch (error) {
+    console.error("Error fetching invoices by patient ID:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getInvoicesByAppointmentId = async (req, res) => {
+  try {
+    const { id } = req.params; // This is the appointment ID from URL
+    console.log("Looking up invoices for appointment ID:", id);
+
+    // Find invoices directly associated with this appointment ID
+    const invoices = await Invoice.find({
+      appointmentId: id,
+    }).populate("appointmentId");
+
+    console.log(`Found ${invoices.length} invoices for appointment ID: ${id}`);
+    return res.status(200).json(invoices);
+  } catch (error) {
+    console.error("Error fetching invoices by appointment ID:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
 exports.updateInvoiceById = async (req, res) => {
   try {
     const { id } = req.params;
