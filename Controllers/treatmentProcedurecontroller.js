@@ -173,18 +173,31 @@ function mapToothNameToNumber(toothName) {
 }
 
 // Get All Treatment
+// Get Treatment by Appointment ID
 exports.getTreatmentById = async (req, res) => {
   try {
-    const uhid = req.params.id;
+    const id = req.params.id;
 
-    if (!uhid) {
+    if (!id) {
       return res.status(400).json({
         success: false,
-        message: "Uhid ID is required",
+        message: "ID is required",
       });
     }
 
-    const treatments = await TreatmentProcedure.find({ uhid });
+    // Check if it's a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID format",
+      });
+    }
+
+    // Convert string ID to ObjectId
+    const objectId = new mongoose.Types.ObjectId(id);
+    
+    // Search by appointmentId instead of uhid
+    const treatments = await TreatmentProcedure.find({ appointmentId: objectId });
 
     if (!treatments || treatments.length === 0) {
       return res.status(404).json({
@@ -205,4 +218,4 @@ exports.getTreatmentById = async (req, res) => {
       error: error.message,
     });
   }
-}
+};
