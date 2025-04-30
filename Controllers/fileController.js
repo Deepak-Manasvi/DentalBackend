@@ -1,43 +1,67 @@
 const File = require("../Models/fileModal");
-const { cloudinary } = require("../Config/cloudinary");
+const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
-// @desc    Upload files
-// @route   POST /api/files
-// @access  Public
 exports.uploadFiles = async (req, res) => {
   try {
-    const uploadedFiles = req.files;
     const { note } = req.body;
+    let uploadedFiles = req.files?.files; // Get the uploaded files
 
-    if (!uploadedFiles || uploadedFiles.length === 0) {
-      return res.status(400).json({ error: "No files uploaded" });
-    }
-
-    const savedFiles = [];
-
-    for (const file of uploadedFiles) {
-      const newFile = new File({
-        filename: file.originalname,
-        fileUrl: file.path,
-        fileType: file.mimetype,
-        cloudinaryId: file.filename,
-        note: note || "",
+    // If no files are uploaded or files field doesn't exist
+    if (!uploadedFiles || (Array.isArray(uploadedFiles) && uploadedFiles.length === 0)) {
+      return res.status(400).json({
+        success: false,
+        message: "No file(s) provided.",
       });
-
-      await newFile.save();
-      savedFiles.push(newFile);
     }
 
-    res.status(201).json(savedFiles);
+    if (!Array.isArray(uploadedFiles)) {
+      uploadedFiles = [uploadedFiles]; 
+    }
+    const uploadedFileData = [];
+    for (let file of uploadedFiles) {
+      const uploadedImage = await uploadImageToCloudinary(
+        file,
+        process.env.FOLDER_NAME,
+        1000,
+        1000
+      );
+
+      if (!uploadedImage || !uploadedImage.secure_url) {
+        return res.status(500).json({
+          success: false,
+          message: "Image upload failed for one of the files.",
+        });
+      }
+
+      // Create an object for the file to be saved in DB
+      const fileData = {
+        filename: file.originalname,
+        fileUrl: uploadedImage.secure_url,
+        fileType: uploadedImage.resource_type,
+        cloudinaryId: uploadedImage.public_id,
+        note,
+      };
+
+      uploadedFileData.push(fileData); // Add file data to the array
+    }
+
+    // Save all uploaded file data to DB
+    await File.insertMany(uploadedFileData);
+
+    return res.status(200).json({
+      success: true,
+      message: "Files uploaded successfully.",
+      data: uploadedFileData, // You can return the file data if needed
+    });
   } catch (error) {
     console.error("Upload error:", error);
-    res.status(500).json({ error: error.message || "Failed to upload files" });
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Failed to upload files",
+    });
   }
 };
 
-// @desc    Get all files
-// @route   GET /api/files
-// @access  Public
 exports.getFiles = async (req, res) => {
   try {
     const files = await File.find().sort({ createdAt: -1 });
@@ -48,9 +72,6 @@ exports.getFiles = async (req, res) => {
   }
 };
 
-// @desc    Get a single file
-// @route   GET /api/files/:id
-// @access  Public
 exports.getFileById = async (req, res) => {
   try {
     const file = await File.findById(req.params.id);
@@ -64,9 +85,6 @@ exports.getFileById = async (req, res) => {
   }
 };
 
-// @desc    Delete a file
-// @route   DELETE /api/files/:id
-// @access  Public
 exports.deleteFile = async (req, res) => {
   try {
     const file = await File.findById(req.params.id);

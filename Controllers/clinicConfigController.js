@@ -212,7 +212,6 @@ exports.getHeaderByAdminId = async (req, res) => {
     }
     
     const config = await ClinicConfig.findOne({ adminId });
-    console.log(config)
 
     if (!config) {
       return res.status(404).json({ message: "Clinic config not found" });

@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const { upload } = require("../Config/cloudinary");
 const {
   uploadFiles,
   getFiles,
@@ -9,7 +8,7 @@ const {
 } = require("../Controllers/fileController");
 
 // Handle file uploads
-router.post("/fileUpload", upload.array("files", 5), uploadFiles);
+router.post("/fileUpload", uploadFiles);
 
 // Get all files
 router.get("/getfileUpload", getFiles);

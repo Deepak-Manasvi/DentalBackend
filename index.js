@@ -51,7 +51,6 @@ database.connectDb()
 
 app.use("/uploads", express.static("uploads"));
 
-
 app.use(
     fileUpload({
         useTempFiles: true,

@@ -9,5 +9,11 @@ exports.uploadImageToCloudinary = async (file, folder, height, quality) => {
     options.quality = quality;
   }
   options.resourse_type = "auto";
-  return await cloudinary.uploader.upload(file.tempFilePath, options);
+  try {
+    const uploadResult = await cloudinary.uploader.upload(file.tempFilePath, options);
+    return uploadResult; // Returns the result which includes the URL of the uploaded image
+  } catch (error) {
+    console.error('Error uploading to Cloudinary:', error);
+    throw new Error('Image upload failed');
+  }
 };

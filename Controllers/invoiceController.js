@@ -119,7 +119,6 @@ exports.getInvoicesByPatientId = async (req, res) => {
 exports.getInvoicesByAppointmentId = async (req, res) => {
   try {
     const { id } = req.params; // This is the appointment ID from URL
-    console.log("Looking up invoices for appointment ID:", id);
 
     // Find invoices directly associated with this appointment ID
     const invoices = await Invoice.find({

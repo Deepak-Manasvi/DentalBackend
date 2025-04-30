@@ -369,7 +369,6 @@ exports.verifyOtp = async (req, res) => {
 
 exports.getAllUser = async (req, res) => {
   try {
-    console.log("entered2")
     const user = await User.find({}).populate("businessDetails").exec();
     if (!user) {
       return res.status(404).json({
