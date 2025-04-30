@@ -1,26 +1,48 @@
 const Prescription = require("../Models/prescriptionModel");
-const mongoose = require("mongoose");
-const Appointment = require("../Models/appointmentModels")
 
 exports.createPrescription = async (req, res) => {
   try {
-    const pres = new Prescription(req.body);
-    await pres.save();
-    res.status(201).json(pres);
+    const { appointmentId, diagnosis, tests, advice, prescriptionItems, doctorName,
+      patientName,
+      age,
+      gender,
+      date,
+      appDate, } = req.body;
+
+    const prescription = new Prescription({
+      appointmentId,
+      diagnosis,
+      tests,
+      advice,
+      prescriptionItems,
+      doctorName,
+      patientName,
+      age,
+      gender,
+      date,
+      appDate,
+    });
+
+    await prescription.save();
+    res.status(201).json({ message: 'Prescription saved successfully', prescription });
   } catch (error) {
-    if (error.name === "ValidationError") {
-      return res.status(400).json({ message: "Validation Error", errors: error.errors });
-    }
-    res.status(500).json({ message: "Error creating prescription", error });
+    res.status(500).json({ error: error.message });
   }
 };
 
-
 exports.getPrescriptionByExamination = async (req, res) => {
   try {
-    const data = await Appointment.findOne({ examinationId: req.params.examId });
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: "Error", error });
+    const { id } = req.params;
+
+    const prescription = await Prescription.findOne({ appointmentId: id });
+
+    if (!prescription) {
+      return res.status(404).json({ success: false, message: "Not found" });
+    }
+
+    res.status(200).json({ success: true, prescription });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };

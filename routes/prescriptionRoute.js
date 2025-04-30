@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { createPrescription, getPrescriptionByExamination } = require("../Controllers/prescriptionController");
 
-router.post("/createPriscription", createPrescription);
+router.post("/createPrescription", createPrescription);
 router.get("/getPrescriptionByExaminationById/:examId", getPrescriptionByExamination);
 
 module.exports = router;
