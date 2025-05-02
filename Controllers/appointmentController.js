@@ -66,7 +66,8 @@ exports.createAppointment = async (req, res) => {
       "doctorName",
       "paymentMode",
       "status",
-      "bp"
+      "bp",
+      "appointmentType",
     ];
 
     for (const field of requiredFields) {
@@ -78,11 +79,27 @@ exports.createAppointment = async (req, res) => {
       }
     }
 
-    // Generate sequential UHID and appointment ID
-    const uhid = await generateUHID();
+    let uhid;
+
+    if (req.body.appointmentType === "New") {
+      uhid = await generateUHID(); // generate new UHID
+    } else if (req.body.appointmentType === "Revisited") {
+      if (!req.body.uhid) {
+        return res.status(400).json({
+          success: false,
+          message: "UHID is required for revisited appointment.",
+        });
+      }
+      uhid = req.body.uhid; // use provided UHID
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid appointmentType. Must be 'New' or 'Revisited'.",
+      });
+    }
+
     const appId = await getNextAppointmentId();
 
-    // Create new appointment with auto-generated IDs
     const newAppointment = new Appointment({
       ...req.body,
       uhid,

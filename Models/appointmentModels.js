@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const appointmentSchema = new mongoose.Schema(
   {
+    appointmentType:{
+      type: String,
+      enum: ["New", "Revisited"],
+      required: true,
+    },
     appId: {
       type: String,
     },
