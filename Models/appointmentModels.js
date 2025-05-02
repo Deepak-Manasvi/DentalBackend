@@ -40,7 +40,6 @@ const appointmentSchema = new mongoose.Schema(
     },
     uhid: {
       type: String,
-      unique: true,
       required: true,
     },
     medicalHistory: [
