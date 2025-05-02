@@ -20,6 +20,7 @@ const {
 router.get("/appointmentList", getAllAppointments);
 router.get("/getAppointment/:id", getAppointmentById);
 router.get("/getAppointmentByAppId/:id", getAppointmentByAppId);
+router.get("/getPatientByUHID/:uhid", getPatientByUHID);
 router.post("/addAppointment", createAppointment);
 router.patch("/updateCheckIn/:id", updateCheckIn);
 router.patch("/update/:id", updateAppointment);

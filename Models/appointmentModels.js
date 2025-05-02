@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const appointmentSchema = new mongoose.Schema(
   {
-    appointmentType:{
+    appointmentType: {
       type: String,
       enum: ["New", "Revisited"],
       required: true,
@@ -66,20 +66,24 @@ const appointmentSchema = new mongoose.Schema(
     appointmentDate: {
       type: Date,
     },
-    appointmentTime: [{
-      type: String,
-    }],
-    doctorName: [{
-      type: String,
-      required: true,
-    }],
+    appointmentTime: [
+      {
+        type: String,
+      },
+    ],
+    doctorName: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
     opdAmount: {
       type: Number,
       required: false,
     },
     paymentMode: {
       type: String,
-      enum: ["Cash", "Card", "UPI"],
+      enum: ["Cash", "Card", "UPI", "Free of Cost"],
       required: true,
     },
     transactionId: {
@@ -100,15 +104,17 @@ const appointmentSchema = new mongoose.Schema(
     },
     InvoiceGenerate: {
       type: Boolean,
-      default: false, 
+      default: false,
     },
     branchId: {
-      type: String
+      type: String,
     },
-    receipts: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Receipt",
-    }],
+    receipts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Receipt",
+      },
+    ],
   },
   { timestamps: true }
 );
