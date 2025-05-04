@@ -219,3 +219,36 @@ exports.getTreatmentById = async (req, res) => {
     });
   }
 };
+exports.getTreatmentByUHIDId = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "ID is required",
+      });
+    }
+    // Search by appointmentId instead of uhid
+    const treatments = await TreatmentProcedure.find({ uhid: id });
+
+    if (!treatments || treatments.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No treatments found for this appointment ID",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: treatments,
+    });
+  } catch (error) {
+    console.error("Error fetching treatments:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching treatments",
+      error: error.message,
+    });
+  }
+};
