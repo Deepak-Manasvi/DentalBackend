@@ -1,13 +1,14 @@
 const Appointment = require( "../Models/appointmentModels");
 const Dentist = require( "../Models/dentistModel");
+const User = require( "../Models/userModel");
 const { getLastMonth, getSevenDaysAgo, getThreeMonthsAgo, getTodayRange } = require( "../utils/date");
 
 //admin
 exports.dashboardDetails = async(req,res) => {
     try{ 
         //doctors
-        const totalDoctors = await Dentist.countDocuments()
-        const doctorList = await Dentist.find({}, "name");
+        const totalDoctors = await User.countDocuments({ opdAmount: { $exists: true } });
+        const doctorList = await User.find({}, "firstName");
      
         const {start: todayStart, end: todayEnd} = getTodayRange();
         const sevenDaysAgo = getSevenDaysAgo()

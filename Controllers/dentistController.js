@@ -1,4 +1,5 @@
 const Dentist = require("../Models/dentistModel");
+const User = require("../Models/userModel");
 
 exports.createDentist = async (req, res) => {
   try {
@@ -66,9 +67,7 @@ exports.getAllDentist = async (req, res) => {
 exports.getDentistsByBranch = async (req, res) => {
   try {
     const { branchId } = req.params;
-
-    const dentists = await Dentist.find({ branch: branchId });
-
+    const dentists = await User.find({ branch: branchId });
     res.status(200).json({
       success: true,
       dentists,
