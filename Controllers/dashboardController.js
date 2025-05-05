@@ -8,8 +8,10 @@ exports.dashboardDetails = async(req,res) => {
     try{ 
         //doctors
         const totalDoctors = await User.countDocuments({ opdAmount: { $exists: true } });
-        const doctorList = await User.find({}, "firstName");
-     
+        const doctorList = await User.find(
+          { opdAmount: { $exists: true, $ne: null } }, // ensures opdAmount exists and is not null
+          { firstName: 1, lastName: 1, _id: 0 } // fetch only these fields
+        );
         const {start: todayStart, end: todayEnd} = getTodayRange();
         const sevenDaysAgo = getSevenDaysAgo()
         const lastMonth = getLastMonth()
@@ -86,19 +88,21 @@ exports.dashboardDetails = async(req,res) => {
 
 
         return res.status(200).json({
-            success: true,
-            totalDoctors,
-            doctorNames: doctorList.map((doc) => doc.name),
-            totalAppointments,
-            todayAppointments,
-            last7DaysAppointments,
-            last3MonthsAppointments,
-            totalPatients,
-            todayPatients,
-            last7DaysPatients,
-            lastMonthPatients,
-            last3MonthsPatients,
-            dailyPatientCounts,
+          success: true,
+          totalDoctors,
+          doctorNames: doctorList.map(
+            (doc) => `${doc.firstName} ${doc.lastName}`
+          ),
+          totalAppointments,
+          todayAppointments,
+          last7DaysAppointments,
+          last3MonthsAppointments,
+          totalPatients,
+          todayPatients,
+          last7DaysPatients,
+          lastMonthPatients,
+          last3MonthsPatients,
+          dailyPatientCounts,
         });
     }catch(error) {
         return res.status(400).json({
